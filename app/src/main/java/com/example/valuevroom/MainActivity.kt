@@ -1,3 +1,5 @@
+package com.example.valuevroom
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -24,7 +26,7 @@ class MainActivity : AppCompatActivity() /*ComponentActivity()*/ {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContent {
+        /*setContent {
             ValueVroomTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -33,9 +35,11 @@ class MainActivity : AppCompatActivity() /*ComponentActivity()*/ {
                     Greeting("Android")
                 }
             }
-        }
+        }*/
 
+        setContentView(R.layout.activity_main)
         loadFragment(HomeFragment())
+        loadFragment(SettingsFragment())
         bottomNav = findViewById(R.id.bottomNav) as BottomNavigationView
         bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
@@ -43,23 +47,29 @@ class MainActivity : AppCompatActivity() /*ComponentActivity()*/ {
                     loadFragment(HomeFragment())
                     true
                 }
+                /*R.id.message -> {
+                    loadFragment(ChatFragment())
+                    true
+                }*/
                 R.id.settings -> {
                     loadFragment(SettingsFragment())
                     true
                 }
+
                 else -> false
             }
         }
     }
+    private  fun loadFragment(fragment: Fragment){
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.containerBottomNav,fragment)
+        transaction.commit()
+    }
+
 }
 
-private fun loadFragment(fragment: Fragment) {
-    val transaction = supportFragmentManager.beginTransaction()
-    transaction.replace(R.id.containerBottomNav, fragment)
-    transaction.commit()
-}
 
-@Composable
+/*@Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
         text = "Hello $name!",
@@ -73,4 +83,4 @@ fun GreetingPreview() {
     ValueVroomTheme {
         Greeting("Android")
     }
-}
+}*/
