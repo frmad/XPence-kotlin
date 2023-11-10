@@ -13,6 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ValueVroom"
+rootProject.name = "XPence"
 include(":app")
  

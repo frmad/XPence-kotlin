@@ -1,4 +1,4 @@
-package com.example.valuevroom
+package sdu.mobile.xpence
 
 import org.junit.Test
 
