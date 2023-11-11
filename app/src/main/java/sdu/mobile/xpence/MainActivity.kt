@@ -9,10 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,42 +26,23 @@ class MainActivity : ComponentActivity() {
             XPenceTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    val greetingText by remember { mutableStateOf("Cassidy") }
-                    NavBar(modifier = Modifier,Color.Yellow )
-                    Greeting(greetingText)
+                    var currentScreen by remember { mutableStateOf(Screen.Home) }
+                    NavBar(
+                        onItemSelected = { screen ->
+                            currentScreen = screen
+                        },
+                        modifier = Modifier,
+                        Color.Gray // This is for the color of the nav bar
+                    )
+                    //Note this will need all Screens in the Screen Enum or an else condition
+                    when (currentScreen) {
+                        Screen.Home -> Home()
+                        Screen.Groups -> Groups()
+                        Screen.Account -> Account()
+                    }
                 }
             }
         }
     }
 }
 
-
-
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Goodbye $name!",
-      //  modifier = modifier.background(Color.Gray)
-    )
-
-}
-
-
-
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    XPenceTheme {
-        Greeting("Android")
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun NavBarPreview() {
-    XPenceTheme {
-        NavBar(Modifier, Color.Blue)
-    }
-}
