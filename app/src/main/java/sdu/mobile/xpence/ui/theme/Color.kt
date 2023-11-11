@@ -1,4 +1,4 @@
-package com.example.valuevroom.ui.theme
+package sdu.mobile.xpence.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
