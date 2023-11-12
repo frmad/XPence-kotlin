@@ -1,0 +1,17 @@
+version: '3.7'
+
+networks:
+    web:
+        external: true
+
+services:
+  xpence-app:
+    build: .
+    restart: unless-stopped
+    networks:
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.xpenceapp.rule=Host(`xpence.gredal.dev`)"
+      - "traefik.http.routers.xpenceapp.tls=true"
+      - "traefik.http.routers.xpenceapp.entrypoints=websecure"
