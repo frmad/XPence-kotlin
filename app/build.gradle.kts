@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.libres)
     alias(libs.plugins.buildConfig)
+    alias(libs.plugins.serialization)
 }
 
 kotlin {
@@ -30,7 +31,13 @@ kotlin {
             implementation(libs.composeImageLoader)
             implementation(libs.napier)
             implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.serialization.json)
             implementation(libs.ktor.core)
+            implementation(libs.ktor.auth)
+            implementation(libs.ktor.json)
+            implementation(libs.ktor.content.negotiation)
+            implementation(libs.multiplatform.settings)
+            implementation(libs.multiplatform.settings.noarg)
         }
 
         commonTest.dependencies {
@@ -50,6 +57,7 @@ kotlin {
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
+            implementation(libs.ktor.client.js)
         }
     }
 }

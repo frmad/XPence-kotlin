@@ -1,10 +1,9 @@
-package sdu.mobile.xpence
+package sdu.mobile.xpence.ui.components
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 
 @Composable
-fun Home(){
-Greeting("HOME")
+fun Greeting(name: String) {
+    Text(text = name)
 }

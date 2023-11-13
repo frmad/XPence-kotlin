@@ -1,8 +1,5 @@
 package sdu.mobile.xpence
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
@@ -62,65 +59,54 @@ data class NavItemData(
     val screen: Screen
 )
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavBar(
     onItemSelected: (Screen) -> Unit,
-    modifier: Modifier = Modifier,
     containerColor: Color = Color.Yellow
 ) {
     var selectedItem by remember { mutableStateOf(0) }
-    Scaffold(
-        bottomBar = {
-            NavigationBar(containerColor = containerColor) {
 
-                navItems.forEachIndexed { index, navItemData ->
-                    NavigationBarItem(
-                        icon = {
-                            Icon(
-                                if (selectedItem == index) navItemData.selectedIcon else navItemData.unselectedIcon,
-                                contentDescription = navItemData.title
-                            )
-                            // This adds the small bubble at the groups icon
-                            BadgedBox(badge = {
-                                if (navItemData.hasBadge) Badge(
-                                    modifier = Modifier.size(5.dp),
-                                    contentColor = Color.Blue
-                                ) {}
+    NavigationBar(containerColor = containerColor) {
 
-                            }) { }
-                        },
-                        label = { Text(navItemData.title) },
-                        selected = selectedItem == index,
-                        onClick = {
-                            selectedItem = index
-                            if (navItemData.hasBadge) updateNavItem(
-                                index, NavItemData(
-                                    title = navItemData.title,
-                                    selectedIcon = navItemData.selectedIcon,
-                                    unselectedIcon = navItemData.unselectedIcon,
-                                    hasBadge = false,
-                                    screen = navItemData.screen
-                                )
-                            )
-                            onItemSelected(navItemData.screen)
-                        },
-                        alwaysShowLabel = false,
-                        colors = NavigationBarItemDefaults.colors(
-                            indicatorColor = Color.Transparent
+        navItems.forEachIndexed { index, navItemData ->
+            NavigationBarItem(
+                icon = {
+                    Icon(
+                        if (selectedItem == index) navItemData.selectedIcon else navItemData.unselectedIcon,
+                        contentDescription = navItemData.title
+                    )
+                    // This adds the small bubble at the groups icon
+                    BadgedBox(badge = {
+                        if (navItemData.hasBadge) Badge(
+                            modifier = Modifier.size(5.dp),
+                            contentColor = Color.Blue
+                        ) {}
+
+                    }) { }
+                },
+                label = { Text(navItemData.title) },
+                selected = selectedItem == index,
+                onClick = {
+                    selectedItem = index
+                    if (navItemData.hasBadge) updateNavItem(
+                        index, NavItemData(
+                            title = navItemData.title,
+                            selectedIcon = navItemData.selectedIcon,
+                            unselectedIcon = navItemData.unselectedIcon,
+                            hasBadge = false,
+                            screen = navItemData.screen
                         )
                     )
+                    onItemSelected(navItemData.screen)
+                },
+                alwaysShowLabel = true,
+                colors = NavigationBarItemDefaults.colors(
+                    indicatorColor = Color.Transparent
+                )
+            )
 
 
-                }
-
-            }
-        }
-    ) { contentPadding ->
-        Column {
-
-            modifier.padding(contentPadding)
         }
     }
 }
