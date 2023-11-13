@@ -183,7 +183,7 @@ fun <T> usingAPI(query: suspend CoroutineScope.(HttpClient) -> Result<T>): State
  * This interface represents the loading, error and success states
  */
 sealed interface QueryState<out T> {
-    object Loading : QueryState<Nothing>
+    data object Loading : QueryState<Nothing>
     data class Error(val message: String) : QueryState<Nothing>
     data class Success<T>(val data: T) : QueryState<T>
 }

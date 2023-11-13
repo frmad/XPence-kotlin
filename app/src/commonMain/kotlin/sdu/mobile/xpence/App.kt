@@ -1,8 +1,12 @@
 package sdu.mobile.xpence
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.launch
 import sdu.mobile.xpence.ui.screens.Account
@@ -14,6 +18,7 @@ import sdu.mobile.xpence.ui.utils.getStoredAuthenticationData
 import sdu.mobile.xpence.ui.utils.login
 import sdu.mobile.xpence.ui.utils.logout
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun App() = XPenceTheme {
     val scope = rememberCoroutineScope()
@@ -31,20 +36,22 @@ internal fun App() = XPenceTheme {
             )
         },
     ) {
-        AuthenticationProvider(authenticationData) {
-            when (currentScreen) {
-                Screen.Home -> Home()
-                Screen.Groups -> Groups()
-                Screen.Account -> Account(
-                    onLogin = { username, password ->
-                        scope.launch {
-                            authenticationData = login(username, password)
+        Box(Modifier.safeDrawingPadding()) {
+            AuthenticationProvider(authenticationData) {
+                when (currentScreen) {
+                    Screen.Home -> Home()
+                    Screen.Groups -> Groups()
+                    Screen.Account -> Account(
+                        onLogin = { username, password ->
+                            scope.launch {
+                                authenticationData = login(username, password)
+                            }
+                        },
+                        onLogout = {
+                            authenticationData = logout()
                         }
-                    },
-                    onLogout = {
-                        authenticationData = logout()
-                    }
-                )
+                    )
+                }
             }
         }
     }

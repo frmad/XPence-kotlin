@@ -15,12 +15,6 @@ data class TokenInfo(
     @SerialName("token_type") val tokenType: String,
 )
 
-//@Serializable
-//data class Group(
-//    @SerialName("id") val id: Int,
-//    @SerialName("name") val name: String,
-//    @SerialName("description") val description: String
-//)
 @Serializable
 data class Group(val id: Int, val name: String)
 
