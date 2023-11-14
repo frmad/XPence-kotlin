@@ -1,7 +1,10 @@
 package sdu.mobile.xpence
 
 //import androidx.compose.ui.platform.LocalWindowOwner
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,8 +14,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -38,6 +45,7 @@ import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import sdu.mobile.xpence.api.DataModel
+import sdu.mobile.xpence.api.Group
 import sdu.mobile.xpence.api.RetrofitAPI
 
 
@@ -175,20 +183,46 @@ fun CreateGroupDialog(
             }
         }
     }
+}*/
+@Composable
+fun GroupButton(group: String) {
+    var isSelected by remember { mutableStateOf(false) }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .clickable { isSelected = !isSelected }
+            .background(
+                color = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
+                shape = RoundedCornerShape(4.dp)
+            )
+            .padding(16.dp)
+    ) {
+        Text(
+            text = group,
+            style = TextStyle(
+                fontSize = 16.sp,
+                color = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+            )
+        )
+    }
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)*/
 
-    //@Preview
-    @Composable
-    fun Groups() {
-    /*var newGroupName by remember { mutableStateOf("") }
+@OptIn(ExperimentalMaterial3Api::class)
+//@Preview
+@Composable
+fun Groups() {
+    var newGroupName by remember { mutableStateOf("") }
     var newGroupDescription by remember { mutableStateOf("") }
-    var groups by remember { mutableStateOf(listOf(Group("My Group", "Description 1"), Group("Other Group", "Description 2"), Group("Other Group", "Description 3"))) }*/
+    //var groups by remember { mutableStateOf(listOf("my group", "other group", "other group")) }
+    var groups by remember { mutableStateOf(listOf(Group("My Group", "Description 1"), Group("Other Group", "Description 2"), Group("Other Group", "Description 3"))) }
+
     var isDialogVisible by remember { mutableStateOf(false) }
 
-    /*Column(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(color = Color.White)
@@ -196,16 +230,21 @@ fun CreateGroupDialog(
     ) {
         // List of groups as buttons
         LazyColumn {
-            items(groups) { group ->
+            /*items(groups) { group ->
                 GroupButton(group = group)
+            }*/
+            items(groups){
+                //group -> GroupButton(groupname = group)
             }
-        }*/
+        }
+    }
 
         // Button to create a new group
         OutlinedButton(
             onClick = { isDialogVisible = true },
             modifier = Modifier
-                .fillMaxWidth()
+                .height(100.dp)
+                .width(200.dp)
                 .padding(top = 16.dp)
         ) {
             Row(
@@ -223,20 +262,22 @@ fun CreateGroupDialog(
         if (isDialogVisible) {
             postData(
                 onDismiss = { isDialogVisible = false },
-                /*onGroupCreated = { newGroup, newDis ->
+                onGroupCreated = { newGroup, newDis ->
                     groups = groups + Group(newGroup, newDis)
                     newGroupName = newGroup
                     newGroupDescription = newDis
-                }*/
+                }
             )
         }
     }
 
 
+//@OptIn(ExperimentalMaterial3Api::class)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun postData(
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    onGroupCreated: (String, String) -> Unit
 ) {
     val name = remember {
         mutableStateOf(TextFieldValue())
@@ -248,99 +289,58 @@ fun postData(
         onDismissRequest = { onDismiss() },
         properties = DialogProperties(dismissOnClickOutside = false)
     ) {
-        // on below line we are creating a column.
         Column(
-            // on below line we are adding a modifier to it
-            // and setting max size, max height and max width
             modifier = Modifier
                 .fillMaxSize()
                 .fillMaxHeight()
                 .fillMaxWidth(),
-            // on below line we are adding vertical
-            // arrangement and horizontal alignment.
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // on below line we are creating a text
             Text(
-                // on below line we are specifying text as
-                // Session Management in Android.
                 text = "All groups",
-                // on below line we are specifying text color.
-                color = Color.Blue,
+                color = MaterialTheme.colorScheme.onPrimary,
                 fontSize = 20.sp,
-                // on below line we are specifying font family
                 fontFamily = FontFamily.Default,
-                // on below line we are adding font weight
-                // and alignment for our text
                 fontWeight = FontWeight.Bold, textAlign = TextAlign.Center
             )
-            //on below line we are adding spacer
             Spacer(modifier = Modifier.height(5.dp))
-            // on below line we are creating a text field for our email.
             TextField(
-                // on below line we are specifying value for our email text field.
                 value = name.value,
-                // on below line we are adding on value change for text field.
                 onValueChange = { name.value = it },
-                // on below line we are adding place holder as text as "Enter your email"
                 placeholder = { Text(text = "Enter the group name") },
-                // on below line we are adding modifier to it
-                // and adding padding to it and filling max width
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxWidth(),
-                // on below line we are adding text style
-                // specifying color and font size to it.
                 textStyle = TextStyle(color = Color.Black, fontSize = 15.sp),
-                // on below line we are adding single line to it.
                 singleLine = true,
             )
-            // on below line we are adding spacer
             Spacer(modifier = Modifier.height(5.dp))
-            // on below line we are creating a text field for our email.
             TextField(
-                // on below line we are specifying value for our email text field.
                 value = description.value,
-                // on below line we are adding on value change for text field.
                 onValueChange = { description.value = it },
-                // on below line we are adding place holder as text as "Enter your email"
                 placeholder = { Text(text = "Enter a description for the group") },
-                // on below line we are adding modifier to it
-                // and adding padding to it and filling max width
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxWidth(),
-                // on below line we are adding text style
-                // specifying color and font size to it.
                 textStyle = TextStyle(color = Color.Black, fontSize = 15.sp),
-                // on below line we ar adding single line to it.
                 singleLine = true,
             )
-            // on below line we are adding spacer
             Spacer(modifier = Modifier.height(10.dp))
-            // on below line we are creating a button
             Button(
                 onClick = {
-                    // on below line we are calling make payment method to update data.
                     postDataUsingRetrofit(
                         name, description
                     )
-                    // Close the dialog after clicking the button
                     onDismiss()
                 },
-                // on below line we are adding modifier to our button.
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                // on below line we are adding text for our button
                 Text(text = "Create Group", modifier = Modifier.padding(8.dp))
             }
-            // on below line we are adding a spacer.
             Spacer(modifier = Modifier.height(20.dp))
-            // on below line we are creating a text for displaying a response.
-
         }
     }
 }
