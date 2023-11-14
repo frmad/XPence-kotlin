@@ -37,8 +37,8 @@ fun Account(
         Greeting(if (AuthenticationProvider.isLoggedIn()) "Logged in" else "Logged out")
 
         if (!AuthenticationProvider.isLoggedIn()){
-            user_name_textField()
-            password_textField()
+            UserNameTextField()
+            PasswordTextField()
 
 
             Button(
@@ -75,7 +75,7 @@ fun Account(
 }
 
 @Composable
-fun user_name_textField() {
+fun UserNameTextField() {
     var input by rememberSaveable { mutableStateOf("") }
 
     OutlinedTextField(
@@ -97,7 +97,7 @@ fun user_name_textField() {
 }
 
 @Composable
-fun password_textField() {
+fun PasswordTextField() {
     var input by rememberSaveable { mutableStateOf("") }
 
     OutlinedTextField(
