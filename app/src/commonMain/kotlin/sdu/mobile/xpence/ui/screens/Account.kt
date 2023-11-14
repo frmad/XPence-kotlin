@@ -91,7 +91,7 @@ fun user_name_textField() {
                 start = 16.dp,
                 top = 30.dp,
                 end = 16.dp,
-                bottom = 30.dp
+                bottom = 20.dp
             )
     )
 }
@@ -114,7 +114,7 @@ fun password_textField() {
                 start = 16.dp,
                 top = 30.dp,
                 end = 16.dp,
-                bottom = 30.dp
+                bottom = 20.dp
             )
     )
 }
