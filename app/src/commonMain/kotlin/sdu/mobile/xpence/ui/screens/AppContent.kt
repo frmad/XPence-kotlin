@@ -1,46 +1,49 @@
 package sdu.mobile.xpence.ui.screens
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import cafe.adriel.voyager.core.screen.Screen
-import sdu.mobile.xpence.NavBar
-import sdu.mobile.xpence.Screens
-import sdu.mobile.xpence.ui.tabs.Account
-import sdu.mobile.xpence.ui.tabs.Groups
-import sdu.mobile.xpence.ui.tabs.Home
+import cafe.adriel.voyager.navigator.tab.CurrentTab
+import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
+import cafe.adriel.voyager.navigator.tab.Tab
+import cafe.adriel.voyager.navigator.tab.TabNavigator
+import sdu.mobile.xpence.ui.tabs.GroupTab
+import sdu.mobile.xpence.ui.tabs.HomeTab
+import sdu.mobile.xpence.ui.tabs.ProfileTab
 import sdu.mobile.xpence.ui.utils.authenticationState
-
-var currentScreen by mutableStateOf(Screens.Home)
 
 class AppContent : Screen {
     @Composable
     override fun Content() {
-        Scaffold(
-            containerColor = MaterialTheme.colorScheme.background,
-            bottomBar = {
-                NavBar(
-                    selectedItem = currentScreen,
-                    onItemSelected = { screen ->
-                        currentScreen = screen
-                    },
-                    Color.Gray // This is for the color of the nav bar
-                )
-            },
-        ) {
-            Box(Modifier.safeDrawingPadding()) {
-                key(authenticationState) {
-                    when (currentScreen) {
-                        Screens.Home -> Home()
-                        Screens.Groups -> Groups()
-                        Screens.Account -> Account()
+        TabNavigator(HomeTab) {
+            Scaffold(
+                content = {
+                    key(authenticationState) {
+                        CurrentTab()
+                    }
+                },
+                bottomBar = {
+                    NavigationBar {
+                        TabNavigationItem(HomeTab)
+                        TabNavigationItem(GroupTab)
+                        TabNavigationItem(ProfileTab)
                     }
                 }
-            }
+            )
         }
+    }
+
+    @Composable
+    private fun RowScope.TabNavigationItem(tab: Tab) {
+        val tabNavigator = LocalTabNavigator.current
+
+        NavigationBarItem(
+            selected = tabNavigator.current == tab,
+            onClick = { tabNavigator.current = tab },
+            icon = { tab.options.icon?.let { Icon(painter = it, contentDescription = tab.options.title) } },
+            label = { Text(text = tab.options.title) }
+        )
     }
 }
