@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import sdu.mobile.xpence.ui.components.Card
+import sdu.mobile.xpence.ui.components.GroupCard
 import sdu.mobile.xpence.ui.utils.QueryState
 import sdu.mobile.xpence.ui.utils.getGroups
 import sdu.mobile.xpence.ui.utils.usingAPI
@@ -15,11 +15,12 @@ fun Groups() {
         getGroups(client)
     }
 
+
     when (val res = result) {
         is QueryState.Success -> {
             Column {
                 res.data.forEach { group ->
-                    Card(group.name, 195, "kr")
+                    GroupCard(group.name, 195, "kr")
                 }
             }
         }

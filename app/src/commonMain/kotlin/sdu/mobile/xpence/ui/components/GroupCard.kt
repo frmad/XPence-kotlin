@@ -16,11 +16,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.jetbrains.skia.Color
-
 
 @Composable
-fun Card(groupTitle: String, amount: Int, currency: String) {
+fun GroupCard(groupTitle: String, amount: Int, currency: String) {
     ElevatedCard(
         shape = RoundedCornerShape(20.dp),
         elevation = CardDefaults.cardElevation(
@@ -31,7 +29,7 @@ fun Card(groupTitle: String, amount: Int, currency: String) {
                 start = 16.dp,
                 top = 30.dp,
                 end = 16.dp,
-                bottom = 16.dp
+                bottom = 45.dp
             )
             .fillMaxWidth()
     ) {
