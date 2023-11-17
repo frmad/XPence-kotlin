@@ -19,6 +19,6 @@ data class TokenInfo(
 data class Group(val id: Int, val name: String)
 
 // API CALLS
-suspend fun getGroups(client: HttpClient): Result<Array<Group>> {
-    return Result.Success(client.get("https://xpense-api.gredal.dev/groups").body<Array<Group>>())
+suspend fun getGroups(client: HttpClient): Array<Group> {
+    return client.get("https://xpense-api.gredal.dev/groups").body<Array<Group>>()
 }
