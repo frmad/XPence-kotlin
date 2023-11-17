@@ -47,7 +47,7 @@ class AuthenticationData(val sessionToken: String? = settings["sessionToken"]) {
  * This stores a global state for the authentication data. The navigator should be setup to get recomposed when this
  * changes.
  */
-var authenticationState: AuthenticationData? by mutableStateOf(AuthenticationData(), structuralEqualityPolicy())
+var authenticationState: AuthenticationData by mutableStateOf(AuthenticationData(), structuralEqualityPolicy())
 
 /**
  * This function is used to generate new authentication data,
