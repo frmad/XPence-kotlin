@@ -13,5 +13,5 @@ To run the application on android device/emulator:
 To run the application in a Browser:
 - Run `./gradlew :app:jsBrowserDevelopmentRun`
 
-You can add `--continous` to run the application in watch mode.
+You can add `--continuous` || `-t` to run the application in watch mode.
 

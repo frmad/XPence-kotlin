@@ -16,9 +16,10 @@ data class TokenInfo(
 )
 
 @Serializable
-data class Group(val id: Int, val name: String)
+data class Group(val id: Int, val name: String, val description: String, @SerialName("currency_code") val currencyCode: String)
 
 // API CALLS
 suspend fun getGroups(client: HttpClient): Array<Group> {
     return client.get("https://xpense-api.gredal.dev/groups").body<Array<Group>>()
 }
+
