@@ -10,13 +10,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Modifier
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.ExperimentalMaterial3Api
 
@@ -40,58 +36,40 @@ fun GroupCard(groupTitle: String, amount: Int, currencyCode: String, onClickStar
             .fillMaxWidth()
     ) {
         Text(
-            fontSize = 20.dp,
-            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.titleMedium,
             text = groupTitle,
             modifier = Modifier
                 .padding(
-                start = 25.dp,
-                top = 25.dp,
-                end = 5.dp,
-                bottom = 5.dp
-                ),
-            textAlign = TextAlign.Center,
+                    start = 25.dp,
+                    top = 25.dp,
+                    end = 5.dp,
+                    bottom = 5.dp
+                )
         )
         Row (
             horizontalArrangement = Arrangement.Center
-
         )
         {
             Text(
                 text = amount.toString(),
-                fontWeight = FontWeight.Bold,
-                fontSize = 24.dp,
+                style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier
                     .padding(
                         start = 25.dp,
                         top = 5.dp
-                        ),
-                textAlign = TextAlign.Center,
+                    )
             )
             Text(
                 text = currencyCode,
+                style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier
                     .padding(
                         start = 25.dp,
                         top = 5.dp
-                        ),
-                textAlign = TextAlign.Center,
+                    )
             )
-
         }
-        
-        Text(
-            text = "You owe",
-            style = MaterialTheme.typography.labelSmall,
-            modifier = Modifier
-                .padding(
-                    start = 25.dp,
-                    top = 10.dp
-                    ),
-            textAlign = TextAlign.Center,
-        )
-
-        Row() { 
+        Row{
             Text(
                 text = "1",
                 modifier = Modifier
@@ -116,7 +94,8 @@ fun GroupCard(groupTitle: String, amount: Int, currencyCode: String, onClickStar
                     ),
                 textAlign = TextAlign.Center,
             )
-         }
+        }
 
     }
+
 }
