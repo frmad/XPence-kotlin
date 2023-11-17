@@ -33,52 +33,21 @@ private val settings = Settings()
  *
  * TODO: Override the getter and parse the session token, and check if it has expired.
  */
-data class AuthenticationData(
-    var sessionToken: String? = null
-) {
+class AuthenticationData(val sessionToken: String? = settings["sessionToken"]) {
+    init {
+        settings["sessionToken"] = sessionToken
+    }
+
     fun isLoggedIn(): Boolean {
         return sessionToken != null
     }
 }
 
 /**
- * To read the authentication data from persisted storage, a helper function is used
+ * This stores a global state for the authentication data. The navigator should be setup to get recomposed when this
+ * changes.
  */
-fun getStoredAuthenticationData() = AuthenticationData(
-    sessionToken = settings["sessionToken"]
-)
-
-/**
- * To make authentication data available to subcomponents the CompositionLocal API is used
- */
-private val LocalAuthenticationData = staticCompositionLocalOf { AuthenticationData() }
-
-/**
- * A wrapper around the CompositionLocal is made, for easier ergonomic access
- */
-val AuthenticationProvider: AuthenticationData
-    @Composable
-    @ReadOnlyComposable
-    get() = LocalAuthenticationData.current
-
-
-/**
- * A wrapper around CompositionLocalProvider is made, which keeps authentication data
- * synchronized with the persistence layer. This should wrap the UI at the top level.
- */
-@Composable
-fun AuthenticationProvider(
-    authenticationData: AuthenticationData,
-    content: @Composable () -> Unit
-) {
-    LaunchedEffect(authenticationData) {
-        settings["sessionToken"] = authenticationData.sessionToken
-    }
-
-    CompositionLocalProvider(LocalAuthenticationData provides authenticationData) {
-        content()
-    }
-}
+var authenticationState: AuthenticationData by mutableStateOf(AuthenticationData(), structuralEqualityPolicy())
 
 /**
  * This function is used to generate new authentication data,
@@ -100,21 +69,19 @@ suspend fun login(username: String, password: String): AuthenticationData {
         }
     )
 
-    val authenticationData = AuthenticationData()
-
     if (response.status.isSuccess()) {
         val tokens: TokenInfo = response.body()
-        authenticationData.sessionToken = tokens.accessToken
+        return AuthenticationData(tokens.accessToken)
     }
 
-    return authenticationData
+    return AuthenticationData()
 }
 
 /**
  * This function should be called to perform logout
  */
 fun logout(): AuthenticationData {
-    return AuthenticationData()
+    return AuthenticationData(null)
 }
 
 /**
@@ -122,7 +89,8 @@ fun logout(): AuthenticationData {
  *
  * @return If the authenticationData session token is invalid, then null is returned.
  */
-fun getHttpClient(authenticationData: AuthenticationData): HttpClient? {
+fun getHttpClient(authenticationData: AuthenticationData?): HttpClient? {
+    authenticationData ?: return null
     val sessionToken = authenticationData.sessionToken ?: return null
 
     return httpClient {
@@ -159,10 +127,9 @@ fun getHttpClient(authenticationData: AuthenticationData): HttpClient? {
  */
 @Composable
 fun <T> usingAPI(query: suspend CoroutineScope.(HttpClient) -> Result<T>): State<QueryState<T>> {
-    val authenticationData = AuthenticationProvider
     return produceState<QueryState<T>>(initialValue = QueryState.Loading) {
         value = withContext(Dispatchers.Default) {
-            val client = getHttpClient(authenticationData)
+            val client = getHttpClient(authenticationState)
             if (client == null) {
                 QueryState.Error("Not signed in")
             } else {
