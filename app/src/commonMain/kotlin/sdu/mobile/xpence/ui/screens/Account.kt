@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import sdu.mobile.xpence.ui.components.Greeting
 import sdu.mobile.xpence.ui.utils.AuthenticationProvider
 
+
 @Composable
 fun Account(
     onLogin: (String, String) -> Unit,
@@ -37,13 +38,16 @@ fun Account(
         Greeting(if (AuthenticationProvider.isLoggedIn()) "Logged in" else "Logged out")
 
         if (!AuthenticationProvider.isLoggedIn()){
-            UserNameTextField()
-            PasswordTextField()
 
+            var username by rememberSaveable { mutableStateOf("") }
+            var password by rememberSaveable { mutableStateOf("") }
+
+            UserNameTextField(username = username, onTextChange = {username = it})
+            PasswordTextField(password = password, onTextChange = {password = it})
 
             Button(
                 onClick = {
-                    onLogin("admin", "admin")
+                    onLogin(username, password)
                 },
                 modifier = Modifier
                     .padding(
@@ -53,7 +57,7 @@ fun Account(
                         bottom = 30.dp
                     )
             ) {
-                Text(text = "Login")
+                Text(text = "Log in")
             }
         }
 
@@ -68,21 +72,20 @@ fun Account(
                         bottom = 30.dp
                     )
             ) {
-                Text(text = "Logout")
+                Text(text = "Log out")
             }
         }
     }
 }
 
 @Composable
-fun UserNameTextField() {
-    var input by rememberSaveable { mutableStateOf("") }
-
+fun UserNameTextField(
+    username: String,
+    onTextChange: (String) -> Unit
+) {
     OutlinedTextField(
-        value = input,
-        onValueChange = { newText ->
-            input = newText.trimStart { it == '0' }
-        },
+        value = username,
+        onValueChange = onTextChange,
         label = { Text("User name") },
         placeholder = { Text("User name") },
         singleLine = true,
@@ -97,14 +100,13 @@ fun UserNameTextField() {
 }
 
 @Composable
-fun PasswordTextField() {
-    var input by rememberSaveable { mutableStateOf("") }
-
+fun PasswordTextField(
+    password: String,
+    onTextChange: (String) -> Unit
+) {
     OutlinedTextField(
-        value = input,
-        onValueChange = { newText ->
-            input = newText.trimStart { it == '0' }
-        },
+        value = password,
+        onValueChange = onTextChange,
         label = { Text("Password") },
         placeholder = { Text("Password") },
         visualTransformation = PasswordVisualTransformation(),
