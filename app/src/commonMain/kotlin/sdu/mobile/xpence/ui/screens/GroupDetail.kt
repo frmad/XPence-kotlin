@@ -43,7 +43,7 @@ class GroupDetail(private val groupId: Int) : Screen {
         MessageData("Ava Johnson", "Coffee Hangout", "Additional snacks and treats", 10)
     )
 
-    
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
