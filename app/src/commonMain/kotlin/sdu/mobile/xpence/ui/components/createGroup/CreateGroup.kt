@@ -1,7 +1,6 @@
-package sdu.mobile.xpence.ui.components
+package sdu.mobile.xpence.ui.components.createGroup
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,13 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -41,7 +34,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 
 @Composable
-fun CreateGroup(){
+fun createGroup(){
     var isDialogVisible by remember { mutableStateOf(false) }
     OutlinedButton(
         onClick = { isDialogVisible = true},
@@ -62,22 +55,16 @@ fun CreateGroup(){
     }
 
     if (isDialogVisible) {
-        CreateDialog(
+        createDialog(
             onDismiss = { isDialogVisible = false },
-            /*onGroupCreated = { newGroup, newDis ->
-                groups = groups + Group(newGroup, newDis)
-                newGroupName = newGroup
-                newGroupDescription = newDis
-            }*/
         )
     }
 }
 
 
 @Composable
-fun CreateDialog(
+fun createDialog(
     onDismiss: () -> Unit,
-    //onGroupCreated: (String, String) -> Unit
 ) {
     Dialog(
         onDismissRequest = { onDismiss() },
@@ -92,7 +79,7 @@ fun CreateDialog(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            text()
+            headerText()
 
             Spacer(modifier = Modifier.height(5.dp))
 
@@ -108,11 +95,15 @@ fun CreateDialog(
             Spacer(modifier = Modifier.height(10.dp))
 
 
-            dropDown()
+            //FIXME get the items by using the api
+            val groupMembers = listOf("Member 1", "Member 2", "Member 3", "Member 4")
 
+            selectGroupMembers(groupMembers)
+
+            Spacer(modifier = Modifier.height(10.dp))
             Button(
                 onClick = {
-                    //TODO post request
+                    //TODO use a post request to create the new group
                     onDismiss()
                 },
                 modifier = Modifier
@@ -128,7 +119,7 @@ fun CreateDialog(
 }
 
 @Composable
-fun text(){
+fun headerText(){
     Text(
         text = "Create a new group",
         color = MaterialTheme.colorScheme.onPrimary,
@@ -174,49 +165,3 @@ fun groupDescriptionTextField(
     )
 }
 
-@Composable
-fun dropDown() {
-    var expanded by remember { mutableStateOf(false) }
-    val items = listOf(
-        "Alice Johnson",
-        "John Doe",
-        "Eva Davis",
-        "Chris Miller",
-        "Sarah White",
-    )
-    Box(
-        modifier = Modifier.fillMaxWidth(0.7f),
-    ) {
-        Button(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = { expanded = true },
-            shape = CircleShape
-        ){
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = "Add Group members",
-                textAlign = TextAlign.Center
-            )
-        }
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-
-        ) {
-            items.forEachIndexed { index, s ->
-                DropdownMenuItem(
-                    text = {
-                        Text(text = s)
-                    },
-                    onClick = {},
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Filled.Add,
-                            contentDescription = "drawable icons",
-                        )
-                    }
-                )
-            }
-        }
-    }
-}
