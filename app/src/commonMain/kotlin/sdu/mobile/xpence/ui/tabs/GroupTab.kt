@@ -10,6 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import sdu.mobile.xpence.ui.components.CreateGroup
 import sdu.mobile.xpence.ui.components.GroupCard
 import sdu.mobile.xpence.ui.utils.QueryState
 import sdu.mobile.xpence.ui.utils.getGroups
@@ -49,5 +50,9 @@ object GroupTab : Tab {
             is QueryState.Loading -> Text(text = "Loading")
             else -> {}
         }
+
+        CreateGroup()
+
+
     }
 }

@@ -100,6 +100,10 @@ compose.experimental {
 libres {
 }
 tasks.getByPath("jsProcessResources").dependsOn("libresGenerateResources")
+dependencies {
+    implementation(libs.androidx.ui.tooling.preview.android)
+    implementation(libs.androidx.camera.core)
+}
 
 buildConfig {
 }
