@@ -28,6 +28,8 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation(libs.libres)
             implementation(libs.voyager.navigator)
+            implementation(libs.voyager.navigator.transitions)
+            implementation(libs.voyager.navigator.tabs)
             implementation(libs.composeImageLoader)
             implementation(libs.napier)
             implementation(libs.kotlinx.coroutines.core)

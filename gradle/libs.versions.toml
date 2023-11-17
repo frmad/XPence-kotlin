@@ -6,7 +6,7 @@ androidx-appcompat = "1.6.1"
 androidx-activityCompose = "1.7.2"
 compose-uitooling = "1.5.1"
 libres = "1.2.1"
-voyager = "1.0.0-rc09"
+voyager = "1.0.0-rc10"
 composeImageLoader = "1.7.0"
 napier = "2.6.1"
 buildConfig = "4.1.1"
@@ -22,6 +22,8 @@ androidx-activityCompose = { module = "androidx.activity:activity-compose", vers
 compose-uitooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose-uitooling" }
 libres = { module = "io.github.skeptick.libres:libres-compose", version.ref = "libres" }
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
+voyager-navigator-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
+voyager-navigator-tabs = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }
 composeImageLoader = { module = "io.github.qdsfdhvh:image-loader", version.ref = "composeImageLoader" }
 napier = { module = "io.github.aakira:napier", version.ref = "napier" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
