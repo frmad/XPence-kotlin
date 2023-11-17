@@ -19,8 +19,3 @@ fun Home() {
         GroupList()
     }
 }
-
-
-
-
-

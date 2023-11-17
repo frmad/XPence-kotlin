@@ -22,4 +22,3 @@ data class Group(val id: Int, val name: String)
 suspend fun getGroups(client: HttpClient): Result<Array<Group>> {
     return Result.Success(client.get("https://xpense-api.gredal.dev/groups").body<Array<Group>>())
 }
-
