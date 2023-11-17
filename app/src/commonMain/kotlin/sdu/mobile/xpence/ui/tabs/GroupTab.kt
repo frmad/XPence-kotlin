@@ -53,6 +53,7 @@ object GroupTab : Tab {
             is QueryState.Loading -> Text(text = "Loading")
             else -> {}
         }
+        CreateGroup()
     }
 }
 
