@@ -126,7 +126,7 @@ fun getHttpClient(authenticationData: AuthenticationData?): HttpClient? {
  * This is a high level wrapper for authenticated access to APIs, that also handles loading and error states
  */
 @Composable
-fun <T> usingAPI(query: suspend CoroutineScope.(HttpClient) -> Result<T>): State<QueryState<T>> {
+fun <T> usingAPI(query: suspend CoroutineScope.(HttpClient) -> T): State<QueryState<T>> {
     return produceState<QueryState<T>>(initialValue = QueryState.Loading) {
         value = withContext(Dispatchers.Default) {
             val client = getHttpClient(authenticationState)
@@ -134,10 +134,7 @@ fun <T> usingAPI(query: suspend CoroutineScope.(HttpClient) -> Result<T>): State
                 QueryState.Error("Not signed in")
             } else {
                 try {
-                    when (val res = query(client)) {
-                        is Result.Error -> QueryState.Error(res.message)
-                        is Result.Success -> QueryState.Success(res.data)
-                    }
+                    QueryState.Success(query(client))
                 } catch (e: Exception) {
                     QueryState.Error("Exception: " + e.message.toString())
                 }
@@ -153,12 +150,4 @@ sealed interface QueryState<out T> {
     data object Loading : QueryState<Nothing>
     data class Error(val message: String) : QueryState<Nothing>
     data class Success<T>(val data: T) : QueryState<T>
-}
-
-/**
- * This class has the basic API result types: Success and error
- */
-sealed class Result<out R> {
-    data class Success<out T>(val data: T) : Result<T>()
-    data class Error(val message: String) : Result<Nothing>()
 }
