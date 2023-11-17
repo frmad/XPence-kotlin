@@ -32,6 +32,7 @@ object GroupTab : Tab {
                     icon = icon,
                 )
             }
+        }
 
 @Composable
 override fun Content() {
