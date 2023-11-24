@@ -21,7 +21,12 @@ data class TokenInfo(
 data class Group(val id: Int, val name: String, val description: String = "", val currency_code: String = "DKK")
 
 @Serializable
-data class User(val username: String)
+data class User(
+    val username: String,
+    val email: String,
+    @SerialName("full_name")
+    val fullName: String,
+)
 
 @Serializable
 data class Balance(

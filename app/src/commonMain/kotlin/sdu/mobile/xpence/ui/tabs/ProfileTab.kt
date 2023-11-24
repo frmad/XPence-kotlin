@@ -13,12 +13,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import kotlinx.coroutines.launch
 import sdu.mobile.xpence.ui.components.Greeting
-import sdu.mobile.xpence.ui.components.PasswordTextField
-import sdu.mobile.xpence.ui.components.UserNameTextField
+import sdu.mobile.xpence.ui.components.entryFeild.PasswordTextField
+import sdu.mobile.xpence.ui.components.entryFeild.UserNameTextField
+import sdu.mobile.xpence.ui.screens.Signup
 import sdu.mobile.xpence.ui.utils.authenticationState
 import sdu.mobile.xpence.ui.utils.login
 import sdu.mobile.xpence.ui.utils.logout
@@ -40,7 +43,9 @@ object ProfileTab : Tab {
 
     @Composable
     override fun Content() {
+        val navigator = LocalNavigator.currentOrThrow
         val coroutineScope = rememberCoroutineScope()
+
 
         Column(
             modifier = Modifier
@@ -79,6 +84,22 @@ object ProfileTab : Tab {
                 ) {
                     Text(text = "Log in")
                 }
+
+                Button(
+                    onClick = {
+                        navigator.parent?.push(Signup())
+                    },
+                    modifier = Modifier
+                        .padding(
+                            start = 16.dp,
+                            top = 20.dp,
+                            end = 16.dp,
+                            bottom = 30.dp
+                        )
+                ) {
+                    Text(text = "Sign up")
+                }
+
             }
 
             if (authenticationState.isLoggedIn()) {

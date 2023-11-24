@@ -43,7 +43,7 @@ class GroupDetail(private val group: Group) : Screen {
                 Triple(currentUser, expenses, members)
             }
             val (currentUser, expenses, members) = (result as? QueryState.Success)?.data ?: Triple(
-                User("loading..."),
+                User("loading...", "", ""),
                 arrayOf(),
                 arrayOf()
             )
