@@ -53,7 +53,7 @@ object ProfileTab : Tab {
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Greeting(if (authenticationState.isLoggedIn()) "Logged in" else "Logged out")
+            Greeting(if (authenticationState.isLoggedIn()) "Log in" else "Log out")
 
             if (!authenticationState.isLoggedIn()) {
 

@@ -102,6 +102,9 @@ compose.experimental {
 libres {
 }
 tasks.getByPath("jsProcessResources").dependsOn("libresGenerateResources")
+dependencies {
+    implementation("androidx.core:core-ktx:+")
+}
 
 buildConfig {
 }
