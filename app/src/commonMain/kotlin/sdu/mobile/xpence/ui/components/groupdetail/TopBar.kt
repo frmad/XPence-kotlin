@@ -18,10 +18,14 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import sdu.mobile.xpence.ui.screens.GroupDetailPayments
+import sdu.mobile.xpence.ui.utils.Group
+import sdu.mobile.xpence.ui.utils.User
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GroupMemberDropdown() {
+fun GroupMemberDropdown(
+    members: Array<User>
+) {
     var expanded by remember { mutableStateOf(false) }
     val items = listOf(
         "Alice Johnson",
@@ -48,10 +52,10 @@ fun GroupMemberDropdown() {
             expanded = expanded,
             onDismissRequest = { expanded = false },
         ) {
-            items.forEachIndexed { index, s ->
+            members.forEachIndexed { index, s ->
                 DropdownMenuItem(
                     text = {
-                        Text(text = s)
+                        Text(text = s.username)
                     },
                     onClick = {},
                     leadingIcon = {
@@ -68,7 +72,10 @@ fun GroupMemberDropdown() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar() {
+fun TopBar(
+    group: Group,
+    members: Array<User>
+) {
     val navigator = LocalNavigator.currentOrThrow
 
     Column(
@@ -77,7 +84,7 @@ fun TopBar() {
         TopAppBar(
             navigationIcon = {
                 IconButton(
-                    onClick = { navigator.pop() }, colors = IconButtonDefaults.iconButtonColors(
+                    onClick = { navigator.parent?.pop() }, colors = IconButtonDefaults.iconButtonColors(
                         containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary
                     )
@@ -88,7 +95,7 @@ fun TopBar() {
                     )
                 }
             },
-            title = { HeaderText("My group: 123kr") },
+            title = { HeaderText("${group.name}: 123kr") },
         )
         Row {
             Column(
@@ -113,7 +120,7 @@ fun TopBar() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                GroupMemberDropdown()
+                GroupMemberDropdown(members)
             }
         }
         Divider(color = Color.Gray, thickness = 0.5.dp)
