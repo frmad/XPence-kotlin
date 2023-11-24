@@ -6,7 +6,6 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 
 // TODO: Autogenerate these from the openapi schema
 
@@ -18,19 +17,35 @@ data class TokenInfo(
 )
 
 @Serializable
-data class Group(val id: Int, val name: String, val description: String = "", val currency_code: String = "DKK")
+data class Group(
+    val id: Int,
+    val name: String,
+    val description: String = "",
+    @SerialName("currency_code") val currencyCode: String = "DKK")
+
+@Serializable
 data class User(val username: String)
+
+@Serializable
 data class Balance(val centes: Int)
+
+@Serializable
 data class Expenses(
     val id: Int,
     val name: String,
     val description: String,
-    val amount_in_cents: Int,
+    @SerialName("amount_in_cents") val amountInCents: Int,
     val groupID: Int,
     val date: String
 )
 
-data class Transactions(val id: Int, val groupID: Int, val username: String, val amount_in_cents: Int, val date: String)
+@Serializable
+data class Transactions(
+    val id: Int,
+    val groupID: Int,
+    val username: String,
+    @SerialName("amount_in_cents") val amountInCents: Int,
+    val date: String)
 // API CALLS
 
 //Users
