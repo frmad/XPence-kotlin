@@ -12,9 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun BottomButton(enabled: Boolean, content: @Composable RowScope.() -> Unit) {
+fun BottomButton(enabled: Boolean, onPress: () -> Unit, content: @Composable RowScope.() -> Unit) {
     Button(
-        onClick = {},
+        onClick = onPress,
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20),
         border = BorderStroke(

@@ -16,19 +16,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun BottomBar() {
+fun BottomBar(
+    onOpenAddExpenseModal: () -> Unit
+) {
     Divider(color = Color.Gray, thickness = 0.5.dp)
     Column(
         modifier = Modifier.fillMaxWidth().padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
-        BottomButton(false) {
+        BottomButton(false, {}) {
             Text(
                 text = "All expenses paid",
             )
         }
-        BottomButton(true) {
+        BottomButton(true, onOpenAddExpenseModal) {
             Text(
                 text = "Add expense",
             )

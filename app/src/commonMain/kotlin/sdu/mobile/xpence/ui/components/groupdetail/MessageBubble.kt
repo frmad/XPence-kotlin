@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import sdu.mobile.xpence.formatDecimal
 
 
 @Composable
@@ -20,6 +21,7 @@ fun MessageBubble(
     amount: Int,
     sender: String,
     isMyMessage: Boolean = true,
+    currency: String
 ) {
     Row(
         Modifier.fillMaxWidth().padding(horizontal = 10.dp),
@@ -49,7 +51,7 @@ fun MessageBubble(
                             style = MaterialTheme.typography.bodyLarge
                         )
                         Text(
-                            "${amount}kr.",
+                            "${(amount / 100.0).formatDecimal(2)} $currency",
                             style = MaterialTheme.typography.bodyLarge,
                             textDecoration = TextDecoration.Underline,
                             fontWeight = FontWeight.Bold

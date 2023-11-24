@@ -1,20 +1,15 @@
 package sdu.mobile.xpence.ui.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.ui.Modifier
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.material3.ExperimentalMaterial3Api
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -25,7 +20,7 @@ fun GroupCard(groupTitle: String, amount: Int, currencyCode: String, onClickStar
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
         ),
-        onClick = {onClickStartSource()},
+        onClick = { onClickStartSource() },
         modifier = Modifier
             .padding(
                 start = 16.dp,
@@ -46,7 +41,7 @@ fun GroupCard(groupTitle: String, amount: Int, currencyCode: String, onClickStar
                     bottom = 5.dp
                 )
         )
-        Row (
+        Row(
             horizontalArrangement = Arrangement.Center
         )
         {
@@ -69,7 +64,7 @@ fun GroupCard(groupTitle: String, amount: Int, currencyCode: String, onClickStar
                     )
             )
         }
-        Row{
+        Row {
             Text(
                 text = "1",
                 modifier = Modifier
@@ -87,7 +82,7 @@ fun GroupCard(groupTitle: String, amount: Int, currencyCode: String, onClickStar
                 textAlign = TextAlign.Center,
             )
             Text(
-                text = "3",
+                text = "7",
                 modifier = Modifier
                     .padding(
                         start = 5.dp
@@ -95,7 +90,5 @@ fun GroupCard(groupTitle: String, amount: Int, currencyCode: String, onClickStar
                 textAlign = TextAlign.Center,
             )
         }
-
     }
-
 }

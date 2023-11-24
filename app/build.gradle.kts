@@ -24,12 +24,14 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(compose.runtime)
+            implementation(compose.material)
             implementation(compose.material3)
             implementation(compose.materialIconsExtended)
             implementation(libs.libres)
             implementation(libs.voyager.navigator)
             implementation(libs.voyager.navigator.transitions)
             implementation(libs.voyager.navigator.tabs)
+            implementation(libs.voyager.navigator.bottomsheet)
             implementation(libs.composeImageLoader)
             implementation(libs.napier)
             implementation(libs.kotlinx.coroutines.core)
