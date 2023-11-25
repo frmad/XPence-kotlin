@@ -22,7 +22,7 @@ data class Group(val id: Int, val name: String)
 data class NewGroup(
     val name: String,
     val description: String,
-    @SerialName("currency_code") val currencyCode: String = "DKK")
+    @SerialName("currency_code") val currencyCode: String)
 
 
 @Serializable
@@ -39,12 +39,24 @@ suspend fun getUsers(client: HttpClient): Array<User> {
 
 
 
-suspend fun createGroup(client: HttpClient, group: NewGroup): Group {
+/*suspend fun createGroup(client: HttpClient, name: String, description: String, currencyCode: String): Group {
     return client.post("https://xpense-api.gredal.dev/groups") {
         contentType(ContentType.Application.Json)
-        setBody(group)
+        setBody(name, description, currencyCode)
     }.body<Group>()
 }
+ */
+suspend fun createGroup(client: HttpClient, name: String, description: String, currencyCode: String): NewGroup {
+    return client.post("https://xpense-api.gredal.dev/groups") {
+        contentType(ContentType.Application.Json)
+
+        parameter("name",name)
+        parameter("description",description)
+        parameter("currency_code",currencyCode)
+
+    }.body<NewGroup>()
+}
+
 
 suspend fun addGroupMember(client: HttpClient, id: Int, member: User): HttpStatusCode {
     return client.post("https://xpense-api.gredal.dev/groups/$id/members") {

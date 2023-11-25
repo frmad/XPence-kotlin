@@ -84,7 +84,7 @@ fun createDialog(
             Spacer(modifier = Modifier.height(10.dp))
 
             var selected by remember { mutableStateOf(listOf<String>()) }
-            val list = remember { mutableStateListOf<String>() }
+            //val list = remember { mutableStateListOf<String>() }
             val result by usingAPI { client ->
                 getUsers(client)
             }
@@ -111,17 +111,20 @@ fun createDialog(
             )
 
             Spacer(modifier = Modifier.height(10.dp))
+
+            val dkk = remember { "DKK" }
+
             Button(
                 onClick = {
-                    val newGroup = NewGroup(
+                    /*val newGroup = NewGroup(
                         name = name,
                         description = description,
-                        currencyCode = "DKK"
-                    )
+                        currencyCode = dkk.toString()
+                    )*/
 
                     coroutineScope.launch {
                         getHttpClient(authenticationState)?.let {client ->
-                            val creationResult = createGroup(client, group = newGroup)
+                            val creationResult = createGroup(client, name, description, dkk.toString())
                             val users = getUsers(client)
                             val selectedUsers = mutableListOf<User>()
                             for (user in users) {
@@ -129,9 +132,9 @@ fun createDialog(
                                     selectedUsers.add(user)
                                 }
                             }
-                            for (member in selectedUsers) {
-                                val addUsersResult = addGroupMember(client, creationResult.id, member)
-                            }
+                            /*for (member in selectedUsers) {
+                                val addUsersResult = addGroupMember(client, creationResult, member)
+                            }*/
                         }
                     }
 
