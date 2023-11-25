@@ -25,8 +25,8 @@ fun createGroup(){
         onClick = { isDialogVisible = true},
         modifier = Modifier
             .height(100.dp)
-            .width(200.dp)
-            .padding(top = 16.dp)
+            .fillMaxWidth()
+            .padding(16.dp)
     ) {
         Row(
             modifier = Modifier
@@ -134,7 +134,6 @@ fun createDialog(
                             }
                         }
                     }
-
 
                     onDismiss()
                 },
