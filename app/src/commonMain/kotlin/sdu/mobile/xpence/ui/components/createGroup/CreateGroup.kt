@@ -1,26 +1,9 @@
 package sdu.mobile.xpence.ui.components.createGroup
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,6 +15,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import kotlinx.coroutines.launch
+import sdu.mobile.xpence.ui.utils.*
 
 @Composable
 fun createGroup(){
@@ -59,13 +44,17 @@ fun createGroup(){
             onDismiss = { isDialogVisible = false },
         )
     }
+
+
 }
 
 
 @Composable
 fun createDialog(
-    onDismiss: () -> Unit,
+    onDismiss: () -> Unit
 ) {
+    val coroutineScope = rememberCoroutineScope()
+
     Dialog(
         onDismissRequest = { onDismiss() },
         properties = DialogProperties(dismissOnClickOutside = false)
@@ -94,16 +83,59 @@ fun createDialog(
 
             Spacer(modifier = Modifier.height(10.dp))
 
+            var selected by remember { mutableStateOf(listOf<String>()) }
+            val list = remember { mutableStateListOf<String>() }
+            val result by usingAPI { client ->
+                getUsers(client)
+            }
 
-            //FIXME get the items by using the api
-            val groupMembers = listOf("Member 1", "Member 2", "Member 3", "Member 4")
+            val users = remember { mutableStateListOf<String>() }
 
-            selectGroupMembers(groupMembers)
+            when (val res = result) {
+                is QueryState.Success -> {
+                    users.clear()
+                    res.data.forEach { user ->
+                        users.add(user.fullName)
+                    }
+                }
+
+                is QueryState.Error -> Text(text = res.message)
+                is QueryState.Loading -> Text(text = "Loading")
+                else -> {}
+            }
+
+            selectGroupMembers(
+                users = users,
+                selectedItems = selected,
+                onSelectItems = { selected = it },
+            )
 
             Spacer(modifier = Modifier.height(10.dp))
             Button(
                 onClick = {
-                    //TODO use a post request to create the new group
+                    val newGroup = NewGroup(
+                        name = name,
+                        description = description,
+                        currencyCode = "DKK"
+                    )
+
+                    coroutineScope.launch {
+                        getHttpClient(authenticationState)?.let {client ->
+                            val creationResult = createGroup(client, group = newGroup)
+                            val users = getUsers(client)
+                            val selectedUsers = mutableListOf<User>()
+                            for (user in users) {
+                                if (selected.contains(user.fullName)) {
+                                    selectedUsers.add(user)
+                                }
+                            }
+                            for (member in selectedUsers) {
+                                val addUsersResult = addGroupMember(client, creationResult.id, member)
+                            }
+                        }
+                    }
+
+
                     onDismiss()
                 },
                 modifier = Modifier
