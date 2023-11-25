@@ -98,16 +98,22 @@ suspend fun getGroup(client: HttpClient, id: Int): Group {
     return client.get("https://xpense-api.gredal.dev/groups/$id").body<Group>()
 }
 
+
 suspend fun getGroupMembers(client: HttpClient, id: Int): Array<GroupMember> {
     return client.get("https://xpense-api.gredal.dev/groups/$id/members").body<Array<GroupMember>>()
 }
 
-suspend fun createGroup(client: HttpClient, group: Group): HttpStatusCode {
+suspend fun createGroup(client: HttpClient, name: String, description: String, currencyCode: String): NewGroup {
     return client.post("https://xpense-api.gredal.dev/groups") {
         contentType(ContentType.Application.Json)
-        setBody(group)
-    }.status
+
+        parameter("name",name)
+        parameter("description",description)
+        parameter("currency_code",currencyCode)
+
+    }.body<NewGroup>()
 }
+
 
 suspend fun addGroupMember(client: HttpClient, id: Int, member: User): HttpStatusCode {
     return client.post("https://xpense-api.gredal.dev/groups/$id/members") {
