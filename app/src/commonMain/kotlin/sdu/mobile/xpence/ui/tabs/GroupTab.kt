@@ -1,6 +1,9 @@
 package sdu.mobile.xpence.ui.tabs
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Text
@@ -18,6 +21,7 @@ import sdu.mobile.xpence.ui.utils.Group
 import sdu.mobile.xpence.ui.utils.QueryState
 import sdu.mobile.xpence.ui.utils.getGroups
 import sdu.mobile.xpence.ui.utils.usingAPI
+import sdu.mobile.xpence.ui.components.createGroup.createGroup
 
 object GroupTab : Tab {
     override val options: TabOptions
@@ -53,7 +57,7 @@ object GroupTab : Tab {
             is QueryState.Loading -> Text(text = "Loading")
             else -> {}
         }
-        CreateGroup()
+        createGroup()
     }
 }
 
