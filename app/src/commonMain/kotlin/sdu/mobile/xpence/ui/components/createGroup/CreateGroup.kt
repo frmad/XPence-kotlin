@@ -128,9 +128,9 @@ fun createDialog(
                                     selectedUsers.add(user)
                                 }
                             }
-                            val notOwner = remember { true }
+                            val owner = remember { false }
                             for (member in selectedUsers) {
-                                val addUsersResult = addGroupMember(client, creationResult.id, member.fullName, notOwner )
+                                val addUsersResult = addGroupMember(client, creationResult.id, member.fullName, owner )
                             }
                         }
                     }
