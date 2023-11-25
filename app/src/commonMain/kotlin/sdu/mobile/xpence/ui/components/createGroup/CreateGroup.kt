@@ -112,29 +112,26 @@ fun createDialog(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            val dkk = remember { "DKK" }
 
             Button(
                 onClick = {
-                    /*val newGroup = NewGroup(
-                        name = name,
-                        description = description,
-                        currencyCode = dkk.toString()
-                    )*/
-
                     coroutineScope.launch {
                         getHttpClient(authenticationState)?.let {client ->
+                            val dkk = remember { "DKK" }
                             val creationResult = createGroup(client, name, description, dkk.toString())
                             val users = getUsers(client)
+                            println(creationResult.id)
+                            println(creationResult.name)
                             val selectedUsers = mutableListOf<User>()
                             for (user in users) {
                                 if (selected.contains(user.fullName)) {
                                     selectedUsers.add(user)
                                 }
                             }
-                            /*for (member in selectedUsers) {
-                                val addUsersResult = addGroupMember(client, creationResult, member)
-                            }*/
+                            val notOwner = remember { true }
+                            for (member in selectedUsers) {
+                                val addUsersResult = addGroupMember(client, creationResult.id, member.fullName, notOwner )
+                            }
                         }
                     }
 
