@@ -14,7 +14,7 @@ import kotlin.math.abs
 @Serializable
 data class TokenInfo(
     @SerialName("access_token") val accessToken: String,
-    @SerialName("token_type") val tokenType: String,
+    @SerialName("token_type") val tokenType: String
 )
 
 @Serializable
@@ -73,6 +73,13 @@ enum class TransactionType {
     DEPOSIT,
     WITHDRAWAL
 }
+
+@Serializable
+data class NewGroup(
+    val name: String,
+    val description: String,
+    @SerialName("currency_code") val currencyCode: String = "DKK"
+)
 
 // API CALLS
 
