@@ -47,6 +47,7 @@ object GroupTab : Tab {
                     res.data.forEach { group ->
                         GroupCard(
                             group.name,
+                            group.description,
                             195,
                             group.currency_code
                         ) { navigator.parent?.push(GroupDetail(group)) }

@@ -1,20 +1,17 @@
 package sdu.mobile.xpence.ui.components
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GroupCard(groupTitle: String, amount: Int, currencyCode: String, onClickStartSource: () -> Unit) {
+fun GroupCard(groupTitle: String, groupDescription: String, amount: Int, currencyCode: String, onClickStartSource: () -> Unit) {
     ElevatedCard(
         shape = RoundedCornerShape(20.dp),
         elevation = CardDefaults.cardElevation(
@@ -30,65 +27,31 @@ fun GroupCard(groupTitle: String, amount: Int, currencyCode: String, onClickStar
             )
             .fillMaxWidth()
     ) {
-        Text(
-            style = MaterialTheme.typography.titleMedium,
-            text = groupTitle,
-            modifier = Modifier
-                .padding(
-                    start = 25.dp,
-                    top = 25.dp,
-                    end = 5.dp,
-                    bottom = 5.dp
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = groupTitle,
+                style = MaterialTheme.typography.titleMedium,
+            )
+            Text(
+                text = groupDescription,
+                style = MaterialTheme.typography.bodyMedium,
+            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = amount.toString(),
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(end = 8.dp)
                 )
-        )
-        Row(
-            horizontalArrangement = Arrangement.Center
-        )
-        {
-            Text(
-                text = amount.toString(),
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier
-                    .padding(
-                        start = 25.dp,
-                        top = 5.dp
-                    )
-            )
-            Text(
-                text = currencyCode,
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier
-                    .padding(
-                        start = 25.dp,
-                        top = 5.dp
-                    )
-            )
-        }
-        Row {
-            Text(
-                text = "1",
-                modifier = Modifier
-                    .padding(
-                        start = 25.dp
-                    ),
-                textAlign = TextAlign.Center,
-            )
-            Text(
-                text = "2",
-                modifier = Modifier
-                    .padding(
-                        start = 5.dp
-                    ),
-                textAlign = TextAlign.Center,
-            )
-            Text(
-                text = "7",
-                modifier = Modifier
-                    .padding(
-                        start = 5.dp
-                    ),
-                textAlign = TextAlign.Center,
-            )
+                Text(
+                    text = currencyCode,
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
         }
     }
 }
