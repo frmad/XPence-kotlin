@@ -143,6 +143,32 @@ fun <T> usingAPI(query: suspend CoroutineScope.(HttpClient) -> T): State<QuerySt
     }
 }
 
+
+suspend fun createUser(client: HttpClient, email: String, name: String, username: String, password: String): AuthenticationData {
+    val localClient = httpClient {
+        install(ContentNegotiation) {
+            json()
+        }
+    }
+
+    val response = localClient.submitForm(url = "https://xpense-api.gredal.dev/signup",
+        formParameters = parameters {
+            append("grant_type", "password")
+            append("username", username)
+            append("email", email)
+            append("name", name)
+            append("password", password)
+        }
+    )
+
+    if (response.status.isSuccess()) {
+        val tokens: TokenInfo = response.body()
+        return AuthenticationData(tokens.accessToken)
+    }
+
+    return AuthenticationData()
+}
+
 /**
  * This interface represents the loading, error and success states
  */

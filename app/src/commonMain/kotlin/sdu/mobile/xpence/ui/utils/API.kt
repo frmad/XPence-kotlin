@@ -100,13 +100,6 @@ suspend fun getGroupMembers(client: HttpClient, id: Int): Array<GroupMember> {
     return client.get("https://xpense-api.gredal.dev/groups/$id/members").body<Array<GroupMember>>()
 }
 
-suspend fun createGroup(client: HttpClient, group: Group): HttpStatusCode {
-    return client.post("https://xpense-api.gredal.dev/groups") {
-        contentType(ContentType.Application.Json)
-        setBody(group)
-    }.status
-}
-
 suspend fun addGroupMember(client: HttpClient, id: Int, member: User): HttpStatusCode {
     return client.post("https://xpense-api.gredal.dev/groups/$id/members") {
         contentType(ContentType.Application.Json)
