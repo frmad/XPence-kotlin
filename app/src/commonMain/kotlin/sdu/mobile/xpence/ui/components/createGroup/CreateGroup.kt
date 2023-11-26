@@ -135,13 +135,13 @@ fun createDialog(
                         getHttpClient(authenticationState)?.let {client ->
                             val creationResult = createGroup(client, name, description, dkk.toString())
 
-                            when(val current = currentUser){
+                            /*when(val current = currentUser){
                                 is QueryState.Success -> {
                                     addGroupMember(client, creationResult.id, current.data.username, owner)
                                 }
                                 is QueryState.Error -> Text(text = current.message)
                                 is QueryState.Loading -> Text(text = "Loading")
-                            }
+                            }*/
 
                             selected.forEach { member ->
                                 addGroupMember(client, creationResult.id, member.username, owner)
