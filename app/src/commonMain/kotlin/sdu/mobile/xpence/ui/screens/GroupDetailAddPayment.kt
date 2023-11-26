@@ -13,6 +13,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.bottomSheet.LocalBottomSheetNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import sdu.mobile.xpence.formatDecimal
 import sdu.mobile.xpence.isIphoneWeb
@@ -76,6 +77,7 @@ class GroupDetailAddPayment(
                             onUnlockRequested = {
                                 coroutineScope.launch {
                                     isLoading = true
+                                    delay(1000)
                                     val client = getHttpClient(authenticationState)
                                     client?.let {
                                         createTransaction(it, group.id, expenseAmountCents, TransactionType.DEPOSIT)
