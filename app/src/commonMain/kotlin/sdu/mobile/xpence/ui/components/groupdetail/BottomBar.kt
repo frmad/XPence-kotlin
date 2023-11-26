@@ -20,6 +20,7 @@ import sdu.mobile.xpence.formatDecimal
 import sdu.mobile.xpence.ui.screens.GroupDetailAddPayment
 import sdu.mobile.xpence.ui.utils.Group
 import sdu.mobile.xpence.ui.utils.GroupMember
+import sdu.mobile.xpence.ui.utils.TransactionType
 import sdu.mobile.xpence.ui.utils.User
 import kotlin.math.abs
 
@@ -66,7 +67,7 @@ fun BottomBar(
     ) {
         BottomButton(true, {
             if (expenseButtonEnabled) {
-                navigator.push(GroupDetailAddPayment(group, balanceAmountCents))
+                navigator.push(GroupDetailAddPayment(group, balanceAmountCents, TransactionType.DEPOSIT))
             } else {
                 onOpenShowStatus()
             }

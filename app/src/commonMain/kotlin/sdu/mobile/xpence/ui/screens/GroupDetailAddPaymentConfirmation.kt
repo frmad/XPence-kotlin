@@ -17,11 +17,13 @@ import sdu.mobile.xpence.formatDecimal
 import sdu.mobile.xpence.ui.tabs.GroupTab
 import sdu.mobile.xpence.ui.tabs.HomeTab
 import sdu.mobile.xpence.ui.utils.Group
+import sdu.mobile.xpence.ui.utils.TransactionType
 import kotlin.math.abs
 
 class GroupDetailAddPaymentConfirmation(
     val group: Group,
     val expenseAmountCents: Int,
+    val transactionType: TransactionType,
     val onExit: (Tab) -> Unit
 ) : Screen {
     @Composable
@@ -36,7 +38,11 @@ class GroupDetailAddPaymentConfirmation(
                 verticalArrangement = Arrangement.spacedBy(72.dp)
             ) {
                 Text(
-                    "Payment of ${abs(expenseAmountCents / 100.0).formatDecimal(2)} ${group.currency_code} made!",
+                    "${if (transactionType == TransactionType.DEPOSIT) "Payment" else "Withdrawal"} of ${
+                        abs(
+                            expenseAmountCents / 100.0
+                        ).formatDecimal(2)
+                    } ${group.currency_code} made!",
                     style = MaterialTheme.typography.headlineMedium
                 )
                 Row(
