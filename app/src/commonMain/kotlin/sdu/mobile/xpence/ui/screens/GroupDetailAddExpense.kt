@@ -156,7 +156,7 @@ fun isDataValid(
 class GroupDetailAddExpense(
     val currentUser: User,
     val group: Group,
-    val members: Array<User>,
+    val members: Array<GroupMember>,
     val onSubmitExpense: () -> Unit
 ) : Screen {
     @OptIn(ExperimentalMaterial3Api::class)
