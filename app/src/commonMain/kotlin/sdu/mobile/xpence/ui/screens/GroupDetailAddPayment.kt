@@ -24,6 +24,7 @@ import kotlin.math.abs
 class GroupDetailAddPayment(
     val group: Group,
     val expenseAmountCents: Int,
+    val transactionType: TransactionType
 ) : Screen {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -61,18 +62,23 @@ class GroupDetailAddPayment(
                         Button(
                             modifier = Modifier.fillMaxWidth(),
                             onClick = {
-                                bottomSheetNavigator.show(GroupDetailAddPaymentConfirmation(group, expenseAmountCents) {
-                                    bottomSheetNavigator.hide()
-                                    navigator.popUntilRoot()
-                                    targetNavigationTab.value = it
-                                })
+                                bottomSheetNavigator.show(
+                                    GroupDetailAddPaymentConfirmation(
+                                        group,
+                                        expenseAmountCents,
+                                        transactionType
+                                    ) {
+                                        bottomSheetNavigator.hide()
+                                        navigator.popUntilRoot()
+                                        targetNavigationTab.value = it
+                                    })
                             }
                         ) {
-                            Text("Click here to make payment")
+                            Text(if (transactionType == TransactionType.DEPOSIT) "Click here to make payment" else "Click here to make withdrawal")
                         }
                     } else {
                         SlideToUnlock(
-                            text = "Swipe to make payment",
+                            text = if (transactionType == TransactionType.DEPOSIT) "Swipe to make payment" else "Swipe to make withdrawal",
                             isLoading = isLoading,
                             onUnlockRequested = {
                                 coroutineScope.launch {
@@ -80,11 +86,12 @@ class GroupDetailAddPayment(
                                     delay(1000)
                                     val client = getHttpClient(authenticationState)
                                     client?.let {
-                                        createTransaction(it, group.id, expenseAmountCents, TransactionType.DEPOSIT)
+                                        createTransaction(it, group.id, expenseAmountCents, transactionType)
                                         bottomSheetNavigator.show(
                                             GroupDetailAddPaymentConfirmation(
                                                 group,
-                                                expenseAmountCents
+                                                expenseAmountCents,
+                                                transactionType
                                             ) {
                                                 bottomSheetNavigator.hide()
                                                 navigator.popUntilRoot()
@@ -110,7 +117,7 @@ class GroupDetailAddPayment(
                     style = MaterialTheme.typography.displayMedium,
                 )
                 Text(
-                    "123kr.",
+                    "",
                     style = MaterialTheme.typography.headlineMedium,
                 )
                 Box(
@@ -118,7 +125,11 @@ class GroupDetailAddPayment(
                         .padding(vertical = 8.dp, horizontal = 16.dp),
                 ) {
                     Text(
-                        "You owe: ${abs(expenseAmountCents / 100.0).formatDecimal(2)} ${group.currency_code}",
+                        "You ${if (transactionType == TransactionType.DEPOSIT) "owe" else "are withdrawing"}: ${
+                            abs(
+                                expenseAmountCents / 100.0
+                            ).formatDecimal(2)
+                        } ${group.currency_code}",
                         color = MaterialTheme.colorScheme.onPrimary
                     )
                 }

@@ -11,7 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.bottomSheet.LocalBottomSheetNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import sdu.mobile.xpence.ui.components.groupdetail.BottomBar
 import sdu.mobile.xpence.ui.components.groupdetail.MessageBubble
 import sdu.mobile.xpence.ui.components.groupdetail.TopBar
@@ -33,6 +35,7 @@ class GroupDetail(private val group: Group) : Screen {
         var refresh by rememberSaveable { mutableStateOf(false) }
         key(refresh) {
             val bottomSheetNavigator = LocalBottomSheetNavigator.current
+            val navigator = LocalNavigator.currentOrThrow
             val result by usingAPI { client ->
                 val expenses = getExpenses(client, group.id)
                 val members = getGroupMembers(client, group.id)
@@ -61,7 +64,10 @@ class GroupDetail(private val group: Group) : Screen {
                         members,
                         onOpenShowStatus = {
                             bottomSheetNavigator.show(
-                                GroupDetailShowStatus(currentUser, group, members)
+                                GroupDetailShowStatus(currentUser, group, members) { amount ->
+                                    bottomSheetNavigator.hide()
+                                    navigator.push(GroupDetailAddPayment(group, amount, TransactionType.WITHDRAWAL))
+                                }
                             )
                         },
                         onOpenAddExpenseModal = {

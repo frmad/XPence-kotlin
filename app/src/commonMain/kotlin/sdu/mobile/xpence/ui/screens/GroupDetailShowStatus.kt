@@ -29,7 +29,8 @@ enum class ShowStatusState {
 class GroupDetailShowStatus(
     val user: User,
     val group: Group,
-    val members: Array<GroupMember>
+    val members: Array<GroupMember>,
+    val onPressWithdraw: (Int) -> Unit
 ) : Screen {
     @Composable
     override fun Content() {
@@ -89,19 +90,19 @@ class GroupDetailShowStatus(
                         }
                         if (status != ShowStatusState.CANNOT_WITHDRAW) {
                             val groupBalance = (result as QueryState.Success<Balance>).data.balanceAmountCents
+                            val amount = min(
+                                groupBalance,
+                                myBalanceCents
+                            )
                             Button(
                                 modifier = Modifier.fillMaxWidth(0.66f), onClick = {
+                                    onPressWithdraw(amount)
                                 },
                                 enabled = status == ShowStatusState.CAN_WITHDRAW
                             ) {
                                 Text(
                                     if (status == ShowStatusState.CAN_WITHDRAW) "Withdraw ${
-                                        abs(
-                                            min(
-                                                groupBalance,
-                                                myBalanceCents
-                                            ) / 100.0
-                                        ).formatDecimal(2)
+                                        abs(amount / 100.0).formatDecimal(2)
                                     } ${group.currency_code}" else "Group balance is zero*",
                                     fontStyle = if (status == ShowStatusState.COULD_WITHDRAW_BUT_NO_BALANCE) FontStyle.Italic else FontStyle.Normal
                                 )
