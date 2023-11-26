@@ -19,10 +19,10 @@ import kotlinx.coroutines.launch
 import sdu.mobile.xpence.ui.utils.*
 
 @Composable
-fun createGroup(){
+fun createGroup() {
     var isDialogVisible by remember { mutableStateOf(false) }
     OutlinedButton(
-        onClick = { isDialogVisible = true},
+        onClick = { isDialogVisible = true },
         modifier = Modifier
             .height(100.dp)
             .fillMaxWidth()
@@ -83,7 +83,7 @@ fun createDialog(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            var selected by remember { mutableStateOf(listOf<String>()) }
+            var selected by remember { mutableStateOf(listOf<User>()) }
 
             val current by usingAPI { client ->
                 getCurrentUser(client)
@@ -93,16 +93,16 @@ fun createDialog(
                 getUsers(client)
             }
 
-            val users = remember { mutableStateListOf<String>() }
+            val users = remember { mutableStateListOf<User>() }
 
             when (val res = result) {
                 is QueryState.Success -> {
                     users.clear()
                     res.data.forEach { user ->
-                        when(val cur = current){
+                        when (val cur = current) {
                             is QueryState.Success -> {
-                                if(user != cur.data){
-                                    users.add(user.fullName)
+                                if (user != cur.data) {
+                                    users.add(user)
                                 }
                             }
 
@@ -111,6 +111,7 @@ fun createDialog(
                         }
                     }
                 }
+
                 is QueryState.Error -> Text(text = res.message)
                 is QueryState.Loading -> Text(text = "Loading")
                 else -> {}
@@ -130,24 +131,16 @@ fun createDialog(
             Button(
                 onClick = {
                     coroutineScope.launch {
-                        getHttpClient(authenticationState)?.let {client ->
-                            val creationResult = createGroup(client, name, description, dkk.toString())
-                            val users = getUsers(client)
-                            val selectedUsers = mutableListOf<User>()
-                            for (user in users) {
-                                if (selected.contains(user.fullName)) {
-                                    selectedUsers.add(user)
-                                }
+                        getHttpClient(authenticationState)?.let { client ->
+                            val newGroup = createGroup(client, name, description, dkk)
+                            for (member in selected) {
+                                addGroupMember(client, newGroup.id, member.username, owner)
                             }
-
-                            /*for (member in selectedUsers) {
-
-                                val addUsersResult = addGroupMember(client, creationResult.id, member.fullName, owner )
-                            }*/
                         }
+                        onDismiss()
                     }
 
-                    onDismiss()
+
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -162,7 +155,7 @@ fun createDialog(
 }
 
 @Composable
-fun headerText(){
+fun headerText() {
     Text(
         text = "Create a new group",
         color = MaterialTheme.colorScheme.onPrimary,
@@ -176,7 +169,7 @@ fun headerText(){
 fun groupNameTextField(
     name: String,
     onTextChange: (String) -> Unit
-){
+) {
     TextField(
         value = name,
         onValueChange = onTextChange,
@@ -194,7 +187,7 @@ fun groupNameTextField(
 fun groupDescriptionTextField(
     description: String,
     onTextChange: (String) -> Unit
-){
+) {
     TextField(
         value = description,
         onValueChange = onTextChange,

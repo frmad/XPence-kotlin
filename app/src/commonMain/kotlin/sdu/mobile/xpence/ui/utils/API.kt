@@ -3,7 +3,6 @@ package sdu.mobile.xpence.ui.utils
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
-import io.ktor.http.*
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -13,26 +12,33 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class TokenInfo(
     @SerialName("access_token") val accessToken: String,
-    @SerialName("token_type") val tokenType: String,)
+    @SerialName("token_type") val tokenType: String,
+)
 
 @Serializable
 data class Group(val id: Int, val name: String)
 
 @Serializable
 data class NewGroup(
+    val id: Int,
     val name: String,
     val description: String,
-    @SerialName("currency_code") val currencyCode: String)
+    @SerialName("currency_code") val currencyCode: String
+)
 
 @Serializable
 data class Member(
     @SerialName("group_id") val groupId: Int,
     val username: String,
-    @SerialName("is_owner") val isOwner: Boolean, )
+    @SerialName("is_owner") val isOwner: Boolean,
+)
 
 
 @Serializable
-data class User(@SerialName("full_name") val fullName: String)
+data class User(
+    val username: String,
+    @SerialName("full_name") val fullName: String
+)
 
 // API CALLS
 suspend fun getGroups(client: HttpClient): Array<Group> {
@@ -46,31 +52,18 @@ suspend fun getUsers(client: HttpClient): Array<User> {
 suspend fun getCurrentUser(client: HttpClient): User {
     return client.get("https://xpense-api.gredal.dev/current_user").body<User>()
 }
+
 suspend fun createGroup(client: HttpClient, name: String, description: String, currencyCode: String): NewGroup {
     return client.post("https://xpense-api.gredal.dev/groups") {
-        contentType(ContentType.Application.Json)
-
-        parameter("name",name)
-        parameter("description",description)
-        parameter("currency_code",currencyCode)
-
+        parameter("name", name)
+        parameter("description", description)
+        parameter("currency_code", currencyCode)
     }.body<NewGroup>()
 }
 
-
-/*
-suspend fun addGroupMember(client: HttpClient, groupId: Int, username: String, isOwner: Boolean): Member {
+suspend fun addGroupMember(client: HttpClient, groupId: Int, username: String, isOwner: Boolean): Array<Member> {
     return client.post("https://xpense-api.gredal.dev/groups/$groupId/members") {
-        contentType(ContentType.Application.Json)
-        parameter("group_id",groupId)
-        parameter("username",username)
-        parameter("is_owner",isOwner)
-    }.body<Member>()
-}*/
-
-suspend fun addGroupMember(client: HttpClient, groupId: Int, username: String, isOwner: Boolean): Member {
-    return client.post("https://xpense-api.gredal.dev/groups/$groupId/members") {
-        contentType(ContentType.Application.Json)
-        setBody(Member(groupId, username, isOwner))
-    }.body<Member>()
+        parameter("username", username)
+        parameter("is_owner", isOwner)
+    }.body<Array<Member>>()
 }

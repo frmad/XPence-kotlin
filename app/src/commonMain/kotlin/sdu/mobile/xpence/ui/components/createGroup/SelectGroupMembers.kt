@@ -10,12 +10,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import sdu.mobile.xpence.ui.utils.User
 
 @Composable
 fun selectGroupMembers(
-    users: List<String>,
-    selectedItems: List<String>,
-    onSelectItems: (List<String>) -> Unit
+    users: List<User>,
+    selectedItems: List<User>,
+    onSelectItems: (List<User>) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -24,7 +25,7 @@ fun selectGroupMembers(
             .verticalScroll(rememberScrollState())
     ) {
         users.forEach { member ->
-            val isSelected = selectedItems.contains(member)
+            val isSelected = selectedItems.any { it.username == member.username }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -46,7 +47,7 @@ fun selectGroupMembers(
                     modifier = Modifier.padding(8.dp)
                 )
                 Text(
-                    text = member,
+                    text = member.fullName,
                     modifier = Modifier
                         .padding(8.dp)
                         .weight(1f)
