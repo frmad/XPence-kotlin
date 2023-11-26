@@ -83,35 +83,35 @@ fun createDialog(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            var selected by remember { mutableStateOf(listOf<String>()) }
+            var selected by remember { mutableStateOf(listOf<User>()) }
 
-            val current by usingAPI { client ->
+            val currentUser by usingAPI { client ->
                 getCurrentUser(client)
             }
 
-            val result by usingAPI { client ->
+            val allUsers by usingAPI { client ->
                 getUsers(client)
             }
 
-            val users = remember { mutableStateListOf<String>() }
+            val users = remember { mutableStateListOf<User>() }
 
-            when (val res = result) {
+            when (val all = allUsers) {
                 is QueryState.Success -> {
                     users.clear()
-                    res.data.forEach { user ->
-                        when(val cur = current){
+                    all.data.forEach { user ->
+                        when(val current = currentUser){
                             is QueryState.Success -> {
-                                if(user != cur.data){
-                                    users.add(user.fullName)
+                                if(user != current.data){
+                                    users.add(user)
                                 }
                             }
 
-                            is QueryState.Error -> Text(text = cur.message)
+                            is QueryState.Error -> Text(text = current.message)
                             is QueryState.Loading -> Text(text = "Loading")
                         }
                     }
                 }
-                is QueryState.Error -> Text(text = res.message)
+                is QueryState.Error -> Text(text = all.message)
                 is QueryState.Loading -> Text(text = "Loading")
                 else -> {}
             }
@@ -127,23 +127,25 @@ fun createDialog(
             val dkk = remember { "DKK" }
             val owner = remember { false }
 
+            Text(selected.toString())
+
             Button(
                 onClick = {
                     coroutineScope.launch {
                         getHttpClient(authenticationState)?.let {client ->
                             val creationResult = createGroup(client, name, description, dkk.toString())
-                            val users = getUsers(client)
-                            val selectedUsers = mutableListOf<User>()
-                            for (user in users) {
-                                if (selected.contains(user.fullName)) {
-                                    selectedUsers.add(user)
+
+                            when(val current = currentUser){
+                                is QueryState.Success -> {
+                                    addGroupMember(client, creationResult.id, current.data.username, owner)
                                 }
+                                is QueryState.Error -> Text(text = current.message)
+                                is QueryState.Loading -> Text(text = "Loading")
                             }
 
-                            /*for (member in selectedUsers) {
-
-                                val addUsersResult = addGroupMember(client, creationResult.id, member.fullName, owner )
-                            }*/
+                            selected.forEach { member ->
+                                addGroupMember(client, creationResult.id, member.username, owner)
+                            }
                         }
                     }
 
