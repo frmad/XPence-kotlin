@@ -158,6 +158,7 @@ suspend fun createUser(email: String, name: String, username: String, password: 
             append("email", email)
             append("full_name", name)
             append("password", password)
+            append("profile_image", "admin.png")
         }
     )
 
