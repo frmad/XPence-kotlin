@@ -28,7 +28,8 @@ fun BottomBar(
     user: User,
     group: Group,
     members: Array<GroupMember>,
-    onOpenAddExpenseModal: () -> Unit
+    onOpenAddExpenseModal: () -> Unit,
+    onOpenShowStatus: () -> Unit
 ) {
     val navigator = LocalNavigator.currentOrThrow
 
@@ -63,8 +64,12 @@ fun BottomBar(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
-        BottomButton(expenseButtonEnabled, {
-            navigator.push(GroupDetailAddPayment(group, balanceAmountCents))
+        BottomButton(true, {
+            if (expenseButtonEnabled) {
+                navigator.push(GroupDetailAddPayment(group, balanceAmountCents))
+            } else {
+                onOpenShowStatus()
+            }
         }) {
             Text(
                 text = expenseText,

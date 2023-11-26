@@ -59,6 +59,11 @@ class GroupDetail(private val group: Group) : Screen {
                         currentUser,
                         group,
                         members,
+                        onOpenShowStatus = {
+                            bottomSheetNavigator.show(
+                                GroupDetailShowStatus(currentUser, group, members)
+                            )
+                        },
                         onOpenAddExpenseModal = {
                             bottomSheetNavigator.show(
                                 GroupDetailAddExpense(

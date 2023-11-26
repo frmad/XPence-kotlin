@@ -22,7 +22,11 @@ data class Group(val id: Int, val name: String, val description: String = "", va
 
 @Serializable
 data class User(val username: String)
-data class Balance(val centes: Int)
+
+@Serializable
+data class Balance(
+    @SerialName("balance_amount_cents") val balanceAmountCents: Int
+)
 
 @Serializable
 data class GroupMember(
@@ -109,8 +113,8 @@ suspend fun deleteGroupMember(client: HttpClient, id: Int, username: String): Ar
     return client.get("https://xpense-api.gredal.dev/groups/$id/members/$username").body<Array<User>>()
 }
 
-suspend fun getGroupBalance(client: HttpClient, id: Int): Array<Balance> {
-    return client.get("https://xpense-api.gredal.dev/groups/$id/balance").body<Array<Balance>>()
+suspend fun getGroupBalance(client: HttpClient, id: Int): Balance {
+    return client.get("https://xpense-api.gredal.dev/groups/$id/balance").body<Balance>()
 }
 
 // Expenses
