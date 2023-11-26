@@ -4,9 +4,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -37,26 +36,31 @@ object GroupTab : Tab {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
 
-        val result by usingAPI { client ->
-            getGroups(client)
-        }
 
-        when (val res = result) {
-            is QueryState.Success -> {
-                Column {
-                    res.data.forEach { group ->
-                        GroupCard(
-                            group.name,
-                            195,
-                            group.currency_code
-                        ) { navigator.parent?.push(GroupDetail(group)) }
-                    }
-                }
+        var refresh by rememberSaveable { mutableStateOf(false) }
+        key(refresh) {
+            val result by usingAPI { client ->
+                getGroups(client)
             }
 
-            is QueryState.Error -> Text(text = res.message)
-            is QueryState.Loading -> Text(text = "Loading")
-            else -> {}
+
+
+            when (val res = result) {
+                is QueryState.Success -> {
+                    Column {
+                        res.data.forEach { group ->
+                            GroupCard(
+                                group.name,
+                                group.description,
+                            ) { navigator.parent?.push(GroupDetail(group)) }
+                        }
+                    }
+                }
+
+                is QueryState.Error -> Text(text = res.message)
+                is QueryState.Loading -> Text(text = "Loading")
+                else -> {}
+            }
         }
     }
 }

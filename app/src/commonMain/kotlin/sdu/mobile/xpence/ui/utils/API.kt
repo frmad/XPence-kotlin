@@ -6,6 +6,7 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlin.math.abs
 
 // TODO: Autogenerate these from the openapi schema
 
@@ -18,6 +19,20 @@ data class TokenInfo(
 
 @Serializable
 data class Group(val id: Int, val name: String, val description: String = "", val currency_code: String = "DKK")
+
+
+@Serializable
+data class GroupMember(
+    val username: String,
+    @SerialName("is_owner") val isOwner: Boolean,
+    @SerialName("balance_amount_cents") val balanceAmountCents: Int,
+)
+data class Transaction(val id: Int, val groupID: Int, val username: String, val amount_in_cents: Int, val date: String)
+
+enum class TransactionType {
+    DEPOSIT,
+    WITHDRAWAL
+}
 
 @Serializable
 data class User(val username: String)
@@ -73,8 +88,8 @@ suspend fun getGroup(client: HttpClient, id: Int): Group {
     return client.get("https://xpense-api.gredal.dev/groups/$id").body<Group>()
 }
 
-suspend fun getGroupMembers(client: HttpClient, id: Int): Array<User> {
-    return client.get("https://xpense-api.gredal.dev/groups/$id/members").body<Array<User>>()
+suspend fun getGroupMembers(client: HttpClient, id: Int): Array<GroupMember> {
+    return client.get("https://xpense-api.gredal.dev/groups/$id/members").body<Array<GroupMember>>()
 }
 
 suspend fun createGroup(client: HttpClient, group: Group): HttpStatusCode {
@@ -117,13 +132,18 @@ suspend fun getExpense(client: HttpClient, groupID: Int, expensesID: Int): Array
 }
 
 //Transactions
-suspend fun getTransactions(client: HttpClient, groupID: Int): Array<Transactions> {
-    return client.get("https://xpense-api.gredal.dev/groups/$groupID/transactions").body<Array<Transactions>>()
+suspend fun getTransactions(client: HttpClient, groupID: Int): Array<Transaction> {
+    return client.get("https://xpense-api.gredal.dev/groups/$groupID/transactions").body<Array<Transaction>>()
 }
 
-suspend fun createExpense(client: HttpClient, groupID: Int, transactions: Transactions): HttpStatusCode {
-    return client.post("https://xpense-api.gredal.dev/groups/$groupID/transactions") {
+suspend fun createTransaction(client: HttpClient, groupID: Int, amountInCents: Int, type: TransactionType) {
+    val amount = when (type) {
+        TransactionType.DEPOSIT -> abs(amountInCents)
+        TransactionType.WITHDRAWAL -> abs(amountInCents) * -1
+    }
+
+    client.post("https://xpense-api.gredal.dev/groups/$groupID/transactions") {
         contentType(ContentType.Application.Json)
-        setBody(transactions)
-    }.status
+        parameter("amount_in_cents", amount)
+    }
 }
