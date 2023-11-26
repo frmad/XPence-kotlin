@@ -84,7 +84,11 @@ fun createDialog(
             Spacer(modifier = Modifier.height(10.dp))
 
             var selected by remember { mutableStateOf(listOf<String>()) }
-            //val list = remember { mutableStateListOf<String>() }
+
+            val current by usingAPI { client ->
+                getCurrentUser(client)
+            }
+
             val result by usingAPI { client ->
                 getUsers(client)
             }
@@ -95,10 +99,18 @@ fun createDialog(
                 is QueryState.Success -> {
                     users.clear()
                     res.data.forEach { user ->
-                        users.add(user.fullName)
+                        when(val cur = current){
+                            is QueryState.Success -> {
+                                if(user != cur.data){
+                                    users.add(user.fullName)
+                                }
+                            }
+
+                            is QueryState.Error -> Text(text = cur.message)
+                            is QueryState.Loading -> Text(text = "Loading")
+                        }
                     }
                 }
-
                 is QueryState.Error -> Text(text = res.message)
                 is QueryState.Loading -> Text(text = "Loading")
                 else -> {}
@@ -112,26 +124,26 @@ fun createDialog(
 
             Spacer(modifier = Modifier.height(10.dp))
 
+            val dkk = remember { "DKK" }
+            val owner = remember { false }
 
             Button(
                 onClick = {
                     coroutineScope.launch {
                         getHttpClient(authenticationState)?.let {client ->
-                            val dkk = remember { "DKK" }
                             val creationResult = createGroup(client, name, description, dkk.toString())
                             val users = getUsers(client)
-                            println(creationResult.id)
-                            println(creationResult.name)
                             val selectedUsers = mutableListOf<User>()
                             for (user in users) {
                                 if (selected.contains(user.fullName)) {
                                     selectedUsers.add(user)
                                 }
                             }
-                            val owner = remember { false }
-                            for (member in selectedUsers) {
+
+                            /*for (member in selectedUsers) {
+
                                 val addUsersResult = addGroupMember(client, creationResult.id, member.fullName, owner )
-                            }
+                            }*/
                         }
                     }
 
