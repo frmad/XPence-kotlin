@@ -19,12 +19,12 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import sdu.mobile.xpence.ui.screens.GroupDetailPayments
 import sdu.mobile.xpence.ui.utils.Group
-import sdu.mobile.xpence.ui.utils.User
+import sdu.mobile.xpence.ui.utils.GroupMember
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GroupMemberDropdown(
-    members: Array<User>
+    members: Array<GroupMember>
 ) {
     var expanded by remember { mutableStateOf(false) }
     val items = listOf(
@@ -74,7 +74,7 @@ fun GroupMemberDropdown(
 @Composable
 fun TopBar(
     group: Group,
-    members: Array<User>
+    members: Array<GroupMember>
 ) {
     val navigator = LocalNavigator.currentOrThrow
 
@@ -84,7 +84,7 @@ fun TopBar(
         TopAppBar(
             navigationIcon = {
                 IconButton(
-                    onClick = { navigator.parent?.pop() }, colors = IconButtonDefaults.iconButtonColors(
+                    onClick = { navigator.pop() }, colors = IconButtonDefaults.iconButtonColors(
                         containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary
                     )
@@ -112,7 +112,7 @@ fun TopBar(
                             textAlign = TextAlign.Center
                         )
                     },
-                    onClick = { navigator.push(GroupDetailPayments()) },
+                    onClick = { navigator.parent?.push(GroupDetailPayments()) },
                     shape = CircleShape
                 )
             }
