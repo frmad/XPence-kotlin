@@ -19,10 +19,10 @@ import kotlinx.coroutines.launch
 import sdu.mobile.xpence.ui.utils.*
 
 @Composable
-fun createGroup(){
+fun createGroup() {
     var isDialogVisible by remember { mutableStateOf(false) }
     OutlinedButton(
-        onClick = { isDialogVisible = true},
+        onClick = { isDialogVisible = true },
         modifier = Modifier
             .height(100.dp)
             .fillMaxWidth()
@@ -85,33 +85,34 @@ fun createDialog(
 
             var selected by remember { mutableStateOf(listOf<User>()) }
 
-            val currentUser by usingAPI { client ->
+            val current by usingAPI { client ->
                 getCurrentUser(client)
             }
 
-            val allUsers by usingAPI { client ->
+            val result by usingAPI { client ->
                 getUsers(client)
             }
 
             val users = remember { mutableStateListOf<User>() }
 
-            when (val all = allUsers) {
+            when (val res = result) {
                 is QueryState.Success -> {
                     users.clear()
-                    all.data.forEach { user ->
-                        when(val current = currentUser){
+                    res.data.forEach { user ->
+                        when (val cur = current) {
                             is QueryState.Success -> {
-                                if(user != current.data){
+                                if (user != cur.data) {
                                     users.add(user)
                                 }
                             }
 
-                            is QueryState.Error -> Text(text = current.message)
+                            is QueryState.Error -> Text(text = cur.message)
                             is QueryState.Loading -> Text(text = "Loading")
                         }
                     }
                 }
-                is QueryState.Error -> Text(text = all.message)
+
+                is QueryState.Error -> Text(text = res.message)
                 is QueryState.Loading -> Text(text = "Loading")
                 else -> {}
             }
@@ -127,29 +128,19 @@ fun createDialog(
             val dkk = remember { "DKK" }
             val owner = remember { false }
 
-            Text(selected.toString())
-
             Button(
                 onClick = {
                     coroutineScope.launch {
-                        getHttpClient(authenticationState)?.let {client ->
-                            val creationResult = createGroup(client, name, description, dkk.toString())
-
-                            /*when(val current = currentUser){
-                                is QueryState.Success -> {
-                                    addGroupMember(client, creationResult.id, current.data.username, owner)
-                                }
-                                is QueryState.Error -> Text(text = current.message)
-                                is QueryState.Loading -> Text(text = "Loading")
-                            }*/
-
-                            selected.forEach { member ->
-                                addGroupMember(client, creationResult.id, member.username, owner)
+                        getHttpClient(authenticationState)?.let { client ->
+                            val newGroup = createGroup(client, name, description, dkk)
+                            for (member in selected) {
+                                addGroupMember(client, newGroup.id, member.username, owner)
                             }
                         }
+                        onDismiss()
                     }
 
-                    onDismiss()
+
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -164,7 +155,7 @@ fun createDialog(
 }
 
 @Composable
-fun headerText(){
+fun headerText() {
     Text(
         text = "Create a new group",
         color = MaterialTheme.colorScheme.onPrimary,
@@ -178,7 +169,7 @@ fun headerText(){
 fun groupNameTextField(
     name: String,
     onTextChange: (String) -> Unit
-){
+) {
     TextField(
         value = name,
         onValueChange = onTextChange,
@@ -196,7 +187,7 @@ fun groupNameTextField(
 fun groupDescriptionTextField(
     description: String,
     onTextChange: (String) -> Unit
-){
+) {
     TextField(
         value = description,
         onValueChange = onTextChange,

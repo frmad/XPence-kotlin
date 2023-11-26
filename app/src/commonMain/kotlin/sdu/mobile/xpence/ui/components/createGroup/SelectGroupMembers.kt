@@ -25,7 +25,7 @@ fun selectGroupMembers(
             .verticalScroll(rememberScrollState())
     ) {
         users.forEach { member ->
-            val isSelected = selectedItems.contains(member)
+            val isSelected = selectedItems.any { it.username == member.username }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
