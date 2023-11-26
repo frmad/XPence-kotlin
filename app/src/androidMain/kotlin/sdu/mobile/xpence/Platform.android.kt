@@ -11,3 +11,7 @@ actual fun Double.formatDecimal(maxFractionDigits: Int): String = DecimalFormat(
     maximumFractionDigits = maxFractionDigits
     isDecimalSeparatorAlwaysShown = false
 }.format(this)
+
+actual fun isIphoneWeb(): Boolean {
+    return false
+}
