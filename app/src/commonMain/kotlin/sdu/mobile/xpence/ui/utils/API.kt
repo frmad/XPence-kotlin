@@ -82,6 +82,12 @@ data class Member(
 
 
 @Serializable
+data class User(
+    @SerialName("full_name") val fullName: String,
+    val username: String
+)
+
+
 data class NewGroup(
     val name: String,
     val description: String,
@@ -110,7 +116,7 @@ suspend fun getGroupMembers(client: HttpClient, id: Int): Array<GroupMember> {
     return client.get("https://xpense-api.gredal.dev/groups/$id/members").body<Array<GroupMember>>()
 }
 
-suspend fun createGroup(client: HttpClient, name: String, description: String, currencyCode: String): NewGroup {
+suspend fun createGroup(client: HttpClient, name: String, description: String, currencyCode: String): Group {
     return client.post("https://xpense-api.gredal.dev/groups") {
         contentType(ContentType.Application.Json)
 
@@ -118,13 +124,17 @@ suspend fun createGroup(client: HttpClient, name: String, description: String, c
         parameter("description",description)
         parameter("currency_code",currencyCode)
 
-    }.body<NewGroup>()
+    }.body<Group>()
 }
+
+
 
 suspend fun addGroupMember(client: HttpClient, groupId: Int, username: String, isOwner: Boolean): Member {
     return client.post("https://xpense-api.gredal.dev/groups/$groupId/members") {
         contentType(ContentType.Application.Json)
         setBody(Member(groupId, username, isOwner))
+        parameter("username",username)
+        parameter("is_owner",isOwner)
     }.body<Member>()
 }
 
@@ -151,21 +161,4 @@ suspend fun createExpense(client: HttpClient, groupID: Int, expense: PostExpense
 
 suspend fun getExpense(client: HttpClient, groupID: Int, expensesID: Int): Array<Expenses> {
     return client.get("https://xpense-api.gredal.dev/groups/$groupID/expenses/$expensesID").body<Array<Expenses>>()
-}
-
-//Transactions
-suspend fun getTransactions(client: HttpClient, groupID: Int): Array<Transaction> {
-    return client.get("https://xpense-api.gredal.dev/groups/$groupID/transactions").body<Array<Transaction>>()
-}
-
-suspend fun createTransaction(client: HttpClient, groupID: Int, amountInCents: Int, type: TransactionType) {
-    val amount = when (type) {
-        TransactionType.DEPOSIT -> abs(amountInCents)
-        TransactionType.WITHDRAWAL -> abs(amountInCents) * -1
-    }
-
-    client.post("https://xpense-api.gredal.dev/groups/$groupID/transactions") {
-        contentType(ContentType.Application.Json)
-        parameter("amount_in_cents", amount)
-    }
 }
