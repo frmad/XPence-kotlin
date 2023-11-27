@@ -18,7 +18,7 @@ fun GroupDescription(group: Group){
         modifier = Modifier
             .padding(
                 start = 10.dp,
-                top = 20.dp,
+                top = 5.dp,
                 end = 10.dp,
                 bottom = 5.dp
             )

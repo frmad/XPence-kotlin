@@ -22,14 +22,14 @@ fun GroupCard(group: Group, amount: Int, currencyCode: String, onClickStartSourc
         modifier = Modifier
             .padding(
                 start = 16.dp,
-                top = 30.dp,
+                top = 20.dp,
                 end = 16.dp,
                 bottom = 45.dp
             )
             .fillMaxWidth()
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(5.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             GroupName(group)
@@ -64,14 +64,14 @@ fun GroupCardWithoutExpenses(group: Group, onClickStartSource: () -> Unit) {
         modifier = Modifier
             .padding(
                 start = 16.dp,
-                top = 30.dp,
+                top = 20.dp,
                 end = 16.dp,
                 bottom = 45.dp
             )
             .fillMaxWidth()
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(5.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             GroupName(group)

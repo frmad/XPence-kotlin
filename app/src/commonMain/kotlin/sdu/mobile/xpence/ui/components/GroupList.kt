@@ -35,7 +35,7 @@ fun GroupList() {
                 Column(
                     modifier = Modifier
                         .align(Alignment.TopCenter)
-                        .padding(10.dp)
+                        .padding(5.dp)
                 ) {
                     res.data.forEach { group ->
                         val expenses by usingAPI { client ->
@@ -57,7 +57,7 @@ fun GroupList() {
                                 text = "Loading",
                                 color = Purple80)
                         }
-                        Spacer(modifier = Modifier.height(30.dp))
+                        Spacer(modifier = Modifier.height(10.dp))
                     }
                 }
             }
