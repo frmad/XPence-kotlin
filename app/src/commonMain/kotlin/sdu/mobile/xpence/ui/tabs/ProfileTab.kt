@@ -23,6 +23,7 @@ import sdu.mobile.xpence.ui.components.entryFeild.PasswordTextField
 import sdu.mobile.xpence.ui.components.entryFeild.UserNameTextField
 import sdu.mobile.xpence.ui.screens.EditUser
 import sdu.mobile.xpence.ui.screens.Signup
+import sdu.mobile.xpence.ui.components.Header
 import sdu.mobile.xpence.ui.utils.authenticationState
 import sdu.mobile.xpence.ui.utils.login
 import sdu.mobile.xpence.ui.utils.logout
@@ -59,6 +60,7 @@ object ProfileTab : Tab {
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Header()
             Greeting(if (authenticationState.isLoggedIn()) "Log in" else "Log out")
 
             if (!authenticationState.isLoggedIn()) {

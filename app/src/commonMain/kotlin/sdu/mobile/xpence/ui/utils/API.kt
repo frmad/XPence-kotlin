@@ -148,8 +148,7 @@ suspend fun createTransaction(client: HttpClient, groupID: Int, amountInCents: I
         contentType(ContentType.Application.Json)
         parameter("amount_in_cents", amount)
     }
-}
-
+    
 suspend fun editUser(email: String, name: String) {
     val localClient = getHttpClient(authenticationState)
 

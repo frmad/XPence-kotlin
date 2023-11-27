@@ -5,12 +5,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import sdu.mobile.xpence.ui.theme.Purple80
@@ -22,7 +22,8 @@ fun Header() {
             .padding(bottom = 20.dp)
             .fillMaxWidth()
             .height(80.dp)
-            .background(Purple80, shape = RectangleShape)
+            .background(Purple80, shape = RoundedCornerShape(topEnd = 0.dp, bottomEnd = 20.dp)),
+
     ) {
         Text(
             text = "XPense",
@@ -35,7 +36,7 @@ fun Header() {
                 )
                 .align(Alignment.Center),
             color = Color.Black,
-            fontSize = 30.sp
+            fontSize = 30.sp,
         )
     }
 }
