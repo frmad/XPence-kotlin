@@ -3,6 +3,7 @@ package sdu.mobile.xpence.ui.utils
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
+import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -146,5 +147,26 @@ suspend fun createTransaction(client: HttpClient, groupID: Int, amountInCents: I
     client.post("https://xpense-api.gredal.dev/groups/$groupID/transactions") {
         contentType(ContentType.Application.Json)
         parameter("amount_in_cents", amount)
+    }
+}
+
+suspend fun editUser(email: String, name: String) {
+    val localClient = getHttpClient(authenticationState)
+
+    val username = localClient?.let { getCurrentUser(it).username }
+
+    localClient?.put("https://xpense-api.gredal.dev/users/$username") {
+        setBody(
+            FormDataContent(
+                Parameters.build {
+                    if (username != null) {
+                        append("username", username)
+                    }
+                    append("email", email)
+                    append("full_name", name)
+                    append("profile_image", "admin.png")
+                }
+            )
+        )
     }
 }

@@ -178,38 +178,6 @@ suspend fun createUser(
     return AuthenticationData()
 }
 
-suspend fun editUser(email: String, name: String): AuthenticationData {
-    val localClient = getHttpClient(authenticationState)
-
-    val username = localClient?.let { getCurrentUser(it).username }
-
-    val response = localClient?.put("https://xpense-api.gredal.dev/users/$username") {
-        setBody(
-            FormDataContent(
-                Parameters.build {
-                    if (username != null) {
-                        append("username", username)
-                    }
-                    append("email", email)
-                    append("full_name", name)
-                    append("profile_image", "admin.png")
-                }
-            )
-        )
-
-    }
-
-
-    if (response != null) {
-        if (response.status.isSuccess()) {
-            val tokens: TokenInfo = response.body()
-            return AuthenticationData(tokens.accessToken)
-        }
-    }
-
-    return AuthenticationData()
-}
-
 /**
  * This interface represents the loading, error and success states
  */
