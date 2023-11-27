@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
     id("com.quittle.setup-android-sdk") version "3.1.0"
     alias(libs.plugins.multiplatform).apply(false)
