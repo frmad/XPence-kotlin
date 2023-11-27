@@ -24,7 +24,6 @@ class AppContent : Screen {
     override fun Content() {
         TabNavigator(targetNavigationTab.value) {
             val tabNavigator = LocalTabNavigator.current
-            NotificationHelper.createNotificationChannel("101","TESTER","THIS IS USED FOR TESTS")
             NotificationHelper.sendNotification("101","NOTIFY","YOU HAVE BEEN NOTIFIED")
             println("YOU HAVE BEEN NOTIFIED")
             if (tabNavigator.current != targetNavigationTab.value) {
