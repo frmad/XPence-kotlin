@@ -47,7 +47,10 @@ class AuthenticationData(val sessionToken: String? = settings["sessionToken"]) {
  * This stores a global state for the authentication data. The navigator should be setup to get recomposed when this
  * changes.
  */
-var authenticationState: AuthenticationData by mutableStateOf(AuthenticationData(), structuralEqualityPolicy())
+var authenticationState: AuthenticationData by mutableStateOf(
+    AuthenticationData(),
+    structuralEqualityPolicy()
+)
 
 /**
  * This function is used to generate new authentication data,
@@ -144,7 +147,12 @@ fun <T> usingAPI(query: suspend CoroutineScope.(HttpClient) -> T): State<QuerySt
 }
 
 
-suspend fun createUser(email: String, name: String, username: String, password: String): AuthenticationData {
+suspend fun createUser(
+    email: String,
+    name: String,
+    username: String,
+    password: String
+): AuthenticationData {
     val localClient = httpClient {
         install(ContentNegotiation) {
             json()
@@ -165,6 +173,38 @@ suspend fun createUser(email: String, name: String, username: String, password: 
     if (response.status.isSuccess()) {
         val tokens: TokenInfo = response.body()
         return AuthenticationData(tokens.accessToken)
+    }
+
+    return AuthenticationData()
+}
+
+suspend fun editUser(email: String, name: String): AuthenticationData {
+    val localClient = getHttpClient(authenticationState)
+
+    val username = localClient?.let { getCurrentUser(it).username }
+
+    val response = localClient?.put("https://xpense-api.gredal.dev/users/$username") {
+        setBody(
+            FormDataContent(
+                Parameters.build {
+                    if (username != null) {
+                        append("username", username)
+                    }
+                    append("email", email)
+                    append("full_name", name)
+                    append("profile_image", "admin.png")
+                }
+            )
+        )
+
+    }
+
+
+    if (response != null) {
+        if (response.status.isSuccess()) {
+            val tokens: TokenInfo = response.body()
+            return AuthenticationData(tokens.accessToken)
+        }
     }
 
     return AuthenticationData()

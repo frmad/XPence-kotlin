@@ -21,6 +21,7 @@ import kotlinx.coroutines.launch
 import sdu.mobile.xpence.ui.components.Greeting
 import sdu.mobile.xpence.ui.components.entryFeild.PasswordTextField
 import sdu.mobile.xpence.ui.components.entryFeild.UserNameTextField
+import sdu.mobile.xpence.ui.screens.EditUser
 import sdu.mobile.xpence.ui.screens.Signup
 import sdu.mobile.xpence.ui.utils.authenticationState
 import sdu.mobile.xpence.ui.utils.login
@@ -103,6 +104,21 @@ object ProfileTab : Tab {
             }
 
             if (authenticationState.isLoggedIn()) {
+                Button(
+                    onClick = {
+                        navigator.parent?.push(EditUser())
+                    },
+                    modifier = Modifier
+                        .padding(
+                            start = 16.dp,
+                            top = 30.dp,
+                            end = 16.dp,
+                            bottom = 30.dp
+                        )
+                ) {
+                    Text(text = "Edit")
+                }
+
                 Button(
                     onClick = {
                         coroutineScope.launch {
