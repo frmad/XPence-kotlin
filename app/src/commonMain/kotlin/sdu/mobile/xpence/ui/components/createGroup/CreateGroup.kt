@@ -107,7 +107,6 @@ fun createDialog(
                 }
                 is QueryState.Error -> Text(text = res.message)
                 is QueryState.Loading -> Text(text = "Loading")
-                else -> {}
             }
 
             selectGroupMembers(

@@ -206,25 +206,24 @@ suspend fun createTransaction(
         contentType(ContentType.Application.Json)
         parameter("amount_in_cents", amount)
     }
+}
+suspend fun editUser(email: String, name: String) {
+    val localClient = getHttpClient(authenticationState)
 
-    suspend fun editUser(email: String, name: String) {
-        val localClient = getHttpClient(authenticationState)
+    val username = localClient?.let { getCurrentUser(it).username }
 
-        val username = localClient?.let { getCurrentUser(it).username }
-
-        localClient?.put("https://xpense-api.gredal.dev/users/$username") {
-            setBody(
-                FormDataContent(
-                    Parameters.build {
-                        if (username != null) {
-                            append("username", username)
-                        }
-                        append("email", email)
-                        append("full_name", name)
-                        append("profile_image", "admin.png")
+    localClient?.put("https://xpense-api.gredal.dev/users/$username") {
+        setBody(
+            FormDataContent(
+                Parameters.build {
+                    if (username != null) {
+                        append("username", username)
                     }
-                )
+                    append("email", email)
+                    append("full_name", name)
+                    append("profile_image", "admin.png")
+                }
             )
-        }
+        )
     }
 }
