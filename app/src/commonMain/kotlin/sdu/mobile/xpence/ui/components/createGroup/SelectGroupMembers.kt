@@ -7,6 +7,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -28,10 +29,10 @@ fun selectGroupMembers(
             val isSelected = selectedItems.any { it.username == member.username }
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(40.dp)
+                    .fillMaxSize()
                     .background(if (isSelected) Color.Gray else Color.Transparent)
-                    .padding(4.dp)
+                    .padding(4.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Checkbox(
                     checked = isSelected,
