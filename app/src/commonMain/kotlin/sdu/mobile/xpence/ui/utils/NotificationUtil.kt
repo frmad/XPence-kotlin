@@ -1,6 +1,6 @@
 package sdu.mobile.xpence.ui.utils
 
-expect object NotificationHelper {
+expect object NotificationUtil {
     fun init(context: Any)
     fun createNotificationChannel(
         channelId: String,

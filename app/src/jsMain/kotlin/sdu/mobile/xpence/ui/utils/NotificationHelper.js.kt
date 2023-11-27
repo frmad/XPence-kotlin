@@ -1,6 +1,6 @@
 package sdu.mobile.xpence.ui.utils
 
-actual object NotificationHelper {
+actual object NotificationUtil {
     actual fun init(context: Any) {
     }
 

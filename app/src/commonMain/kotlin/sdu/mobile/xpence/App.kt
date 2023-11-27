@@ -7,7 +7,6 @@ import cafe.adriel.voyager.navigator.bottomSheet.BottomSheetNavigator
 import cafe.adriel.voyager.transitions.SlideTransition
 import sdu.mobile.xpence.ui.screens.AppContent
 import sdu.mobile.xpence.ui.theme.XPenceTheme
-import sdu.mobile.xpence.ui.utils.NotificationHelper
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable

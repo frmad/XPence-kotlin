@@ -13,7 +13,6 @@ import cafe.adriel.voyager.navigator.tab.TabNavigator
 import sdu.mobile.xpence.ui.tabs.GroupTab
 import sdu.mobile.xpence.ui.tabs.HomeTab
 import sdu.mobile.xpence.ui.tabs.ProfileTab
-import sdu.mobile.xpence.ui.utils.NotificationHelper
 import sdu.mobile.xpence.ui.utils.authenticationState
 
 // This is a hack, please fix if you know of a better solution
@@ -24,8 +23,6 @@ class AppContent : Screen {
     override fun Content() {
         TabNavigator(targetNavigationTab.value) {
             val tabNavigator = LocalTabNavigator.current
-            NotificationHelper.sendNotification("101","NOTIFY","YOU HAVE BEEN NOTIFIED")
-            println("YOU HAVE BEEN NOTIFIED")
             if (tabNavigator.current != targetNavigationTab.value) {
                 tabNavigator.current = targetNavigationTab.value
             }

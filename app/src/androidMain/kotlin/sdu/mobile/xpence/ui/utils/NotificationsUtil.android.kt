@@ -1,4 +1,5 @@
 package sdu.mobile.xpence.ui.utils
+
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -6,8 +7,7 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 
 
-
-actual object NotificationHelper {
+actual object NotificationUtil {
     private lateinit var appContext: Context
 
     actual fun init(context: Any) {
@@ -23,16 +23,18 @@ actual object NotificationHelper {
             val notificationManager: NotificationManager =
                 appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
-        }    }
+        }
+    }
 
     actual fun sendNotification(channelId: String, title: String, content: String) {
         val builder = NotificationCompat.Builder(appContext, channelId)
-            .setSmallIcon(androidx.core.R.drawable.notification_bg)
+            .setSmallIcon(androidx.core.R.drawable.ic_call_decline_low)
             .setContentTitle(title)
             .setContentText(content)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
         val notificationManager: NotificationManager =
             appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.notify(0, builder.build())    }
+        notificationManager.notify(0, builder.build())
+    }
 }
