@@ -20,8 +20,6 @@ data class TokenInfo(
 @Serializable
 data class Group(val id: Int, val name: String, val description: String = "", val currency_code: String = "DKK")
 
-@Serializable
-data class User(val username: String)
 
 @Serializable
 data class Balance(
@@ -78,25 +76,31 @@ enum class TransactionType {
 data class Member(
     @SerialName("group_id") val groupId: Int,
     val username: String,
-    @SerialName("is_owner") val isOwner: Boolean, )
+    @SerialName("is_owner") val isOwner: Boolean,
+)
 
 
 @Serializable
 data class User(
+    val username: String,
     @SerialName("full_name") val fullName: String,
-    val username: String
+    val email: String
 )
 
-
+@Serializable
 data class NewGroup(
+    val id: Int,
     val name: String,
     val description: String,
-    @SerialName("currency_code") val currencyCode: String = "DKK"
+    @SerialName("currency_code") val currencyCode: String
 )
 
 // API CALLS
 
 //Users
+suspend fun getUsers(client: HttpClient): Array<User> {
+    return client.get("https://xpense-api.gredal.dev/users").body<Array<User>>()
+}
 
 suspend fun getCurrentUser(client: HttpClient): User {
     return client.get("https://xpense-api.gredal.dev/current_user").body<User>()
@@ -116,26 +120,22 @@ suspend fun getGroupMembers(client: HttpClient, id: Int): Array<GroupMember> {
     return client.get("https://xpense-api.gredal.dev/groups/$id/members").body<Array<GroupMember>>()
 }
 
-suspend fun createGroup(client: HttpClient, name: String, description: String, currencyCode: String): Group {
+suspend fun createGroup(client: HttpClient, name: String, description: String, currencyCode: String): NewGroup {
     return client.post("https://xpense-api.gredal.dev/groups") {
-        contentType(ContentType.Application.Json)
+        parameter("name", name)
+        parameter("description", description)
+        parameter("currency_code", currencyCode)
 
-        parameter("name",name)
-        parameter("description",description)
-        parameter("currency_code",currencyCode)
-
-    }.body<Group>()
+    }.body<NewGroup>()
 }
 
-
-
-suspend fun addGroupMember(client: HttpClient, groupId: Int, username: String, isOwner: Boolean): Member {
+suspend fun addGroupMember(client: HttpClient, groupId: Int, username: String, isOwner: Boolean): Array<Member> {
     return client.post("https://xpense-api.gredal.dev/groups/$groupId/members") {
         contentType(ContentType.Application.Json)
         setBody(Member(groupId, username, isOwner))
-        parameter("username",username)
-        parameter("is_owner",isOwner)
-    }.body<Member>()
+        parameter("username", username)
+        parameter("is_owner", isOwner)
+    }.body<Array<Member>>()
 }
 
 suspend fun deleteGroupMember(client: HttpClient, id: Int, username: String): Array<User> {
@@ -147,7 +147,6 @@ suspend fun getGroupBalance(client: HttpClient, id: Int): Balance {
 }
 
 // Expenses
-
 suspend fun getExpenses(client: HttpClient, groupID: Int): Array<Expenses> {
     return client.get("https://xpense-api.gredal.dev/groups/$groupID/expenses").body<Array<Expenses>>()
 }
@@ -161,4 +160,21 @@ suspend fun createExpense(client: HttpClient, groupID: Int, expense: PostExpense
 
 suspend fun getExpense(client: HttpClient, groupID: Int, expensesID: Int): Array<Expenses> {
     return client.get("https://xpense-api.gredal.dev/groups/$groupID/expenses/$expensesID").body<Array<Expenses>>()
+}
+
+//Transactions
+suspend fun getTransactions(client: HttpClient, groupID: Int): Array<Transaction> {
+    return client.get("https://xpense-api.gredal.dev/groups/$groupID/transactions").body<Array<Transaction>>()
+}
+
+suspend fun createTransaction(client: HttpClient, groupID: Int, amountInCents: Int, type: TransactionType) {
+    val amount = when (type) {
+        TransactionType.DEPOSIT -> abs(amountInCents)
+        TransactionType.WITHDRAWAL -> abs(amountInCents) * -1
+    }
+
+    client.post("https://xpense-api.gredal.dev/groups/$groupID/transactions") {
+        contentType(ContentType.Application.Json)
+        parameter("amount_in_cents", amount)
+    }
 }
