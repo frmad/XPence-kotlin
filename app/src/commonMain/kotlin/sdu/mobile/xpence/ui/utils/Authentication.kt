@@ -47,7 +47,10 @@ class AuthenticationData(val sessionToken: String? = settings["sessionToken"]) {
  * This stores a global state for the authentication data. The navigator should be setup to get recomposed when this
  * changes.
  */
-var authenticationState: AuthenticationData by mutableStateOf(AuthenticationData(), structuralEqualityPolicy())
+var authenticationState: AuthenticationData by mutableStateOf(
+    AuthenticationData(),
+    structuralEqualityPolicy()
+)
 
 /**
  * This function is used to generate new authentication data,
@@ -141,6 +144,38 @@ fun <T> usingAPI(query: suspend CoroutineScope.(HttpClient) -> T): State<QuerySt
             }
         }
     }
+}
+
+
+suspend fun createUser(
+    email: String,
+    name: String,
+    username: String,
+    password: String
+): AuthenticationData {
+    val localClient = httpClient {
+        install(ContentNegotiation) {
+            json()
+        }
+    }
+
+    val response = localClient.submitForm(
+        url = "https://xpense-api.gredal.dev/signup",
+        formParameters = parameters {
+            append("username", username)
+            append("email", email)
+            append("full_name", name)
+            append("password", password)
+            append("profile_image", "admin.png")
+        }
+    )
+
+    if (response.status.isSuccess()) {
+        val tokens: TokenInfo = response.body()
+        return AuthenticationData(tokens.accessToken)
+    }
+
+    return AuthenticationData()
 }
 
 /**

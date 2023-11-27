@@ -1,24 +1,22 @@
-package sdu.mobile.xpence.ui.components
+package sdu.mobile.xpence.ui.components.entryFeild
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun PasswordTextField(
-    password: String,
+fun FullNameTextField(
+    fullName: String,
     onTextChange: (String) -> Unit
 ) {
     OutlinedTextField(
-        value = password,
+        value = fullName,
         onValueChange = onTextChange,
-        label = { Text("Password") },
-        placeholder = { Text("Password") },
-        visualTransformation = PasswordVisualTransformation(),
+        label = { Text("Full name") },
+        placeholder = { Text("John Doe") },
         singleLine = true,
         modifier = Modifier
             .padding(
@@ -28,4 +26,8 @@ fun PasswordTextField(
                 bottom = 20.dp
             )
     )
+}
+private fun isValidText(text: String): Boolean {
+    // Add your custom validation rules here
+    return text.matches(Regex("[a-zA-Z]+"))
 }

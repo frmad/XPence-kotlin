@@ -14,13 +14,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import kotlinx.coroutines.launch
 import sdu.mobile.xpence.ui.components.Greeting
+import sdu.mobile.xpence.ui.components.entryFeild.PasswordTextField
+import sdu.mobile.xpence.ui.components.entryFeild.UserNameTextField
+import sdu.mobile.xpence.ui.screens.EditUser
+import sdu.mobile.xpence.ui.screens.Signup
 import sdu.mobile.xpence.ui.components.Header
-import sdu.mobile.xpence.ui.components.PasswordTextField
-import sdu.mobile.xpence.ui.components.UserNameTextField
 import sdu.mobile.xpence.ui.utils.authenticationState
 import sdu.mobile.xpence.ui.utils.login
 import sdu.mobile.xpence.ui.utils.logout
@@ -42,6 +46,7 @@ object ProfileTab : Tab {
 
     @Composable
     override fun Content() {
+        val navigator = LocalNavigator.currentOrThrow
         val coroutineScope = rememberCoroutineScope()
 
         Scaffold(
@@ -84,26 +89,56 @@ object ProfileTab : Tab {
                     }
                 }
 
-                if (authenticationState.isLoggedIn()) {
-                    Button(
-                        onClick = {
-                            coroutineScope.launch {
-                                authenticationState = logout()
-                            }
-                        },
-                        modifier = Modifier
-                            .padding(
-                                start = 16.dp,
-                                top = 30.dp,
-                                end = 16.dp,
-                                bottom = 30.dp
-                            )
-                    ) {
-                        Text(text = "Log out")
-                    }
+                Button(
+                    onClick = {
+                        navigator.parent?.push(Signup())
+                    },
+                    modifier = Modifier
+                        .padding(
+                            start = 16.dp,
+                            top = 20.dp,
+                            end = 16.dp,
+                            bottom = 30.dp
+                        )
+                ) {
+                    Text(text = "Sign up")
+                }
+
+            }
+
+            if (authenticationState.isLoggedIn()) {
+                Button(
+                    onClick = {
+                        navigator.parent?.push(EditUser())
+                    },
+                    modifier = Modifier
+                        .padding(
+                            start = 16.dp,
+                            top = 30.dp,
+                            end = 16.dp,
+                            bottom = 30.dp
+                        )
+                ) {
+                    Text(text = "Edit")
+                }
+
+                Button(
+                    onClick = {
+                        coroutineScope.launch {
+                            authenticationState = logout()
+                        }
+                    },
+                    modifier = Modifier
+                        .padding(
+                            start = 16.dp,
+                            top = 30.dp,
+                            end = 16.dp,
+                            bottom = 30.dp
+                        )
+                ) {
+                    Text(text = "Log out")
                 }
             }
         }
-
     }
 }
