@@ -12,8 +12,9 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
-import sdu.mobile.xpence.ui.components.GroupCard
+import sdu.mobile.xpence.ui.components.groupCard.GroupCardWithoutExpenses
 import sdu.mobile.xpence.ui.screens.GroupDetail
+import sdu.mobile.xpence.ui.utils.Group
 import sdu.mobile.xpence.ui.utils.QueryState
 import sdu.mobile.xpence.ui.utils.getGroups
 import sdu.mobile.xpence.ui.utils.usingAPI
@@ -35,8 +36,6 @@ object GroupTab : Tab {
 
     @Composable
     override fun Content() {
-        val navigator = LocalNavigator.currentOrThrow
-
         val result by usingAPI { client ->
             getGroups(client)
         }
@@ -45,12 +44,7 @@ object GroupTab : Tab {
             is QueryState.Success -> {
                 Column {
                     res.data.forEach { group ->
-                        GroupCard(
-                            group.name,
-                            group.description,
-                            195,
-                            group.currency_code
-                        ) { navigator.parent?.push(GroupDetail(group)) }
+                        GroupBox(group)
                     }
                 }
             }
@@ -60,4 +54,10 @@ object GroupTab : Tab {
             else -> {}
         }
     }
+}
+
+@Composable
+fun GroupBox(group: Group){
+    val navigator = LocalNavigator.currentOrThrow
+    GroupCardWithoutExpenses(group) { navigator.parent?.push(GroupDetail(group)) }
 }
