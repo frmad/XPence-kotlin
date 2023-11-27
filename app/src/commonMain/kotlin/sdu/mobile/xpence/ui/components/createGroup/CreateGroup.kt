@@ -38,14 +38,11 @@ fun createGroup() {
             Text(text = "Create New Group")
         }
     }
-
     if (isDialogVisible) {
         createDialog(
             onDismiss = { isDialogVisible = false },
         )
     }
-
-
 }
 
 
@@ -61,9 +58,7 @@ fun createDialog(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .fillMaxHeight()
-                .fillMaxWidth(),
+                .fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -105,13 +100,11 @@ fun createDialog(
                                     users.add(user)
                                 }
                             }
-
                             is QueryState.Error -> Text(text = cur.message)
                             is QueryState.Loading -> Text(text = "Loading")
                         }
                     }
                 }
-
                 is QueryState.Error -> Text(text = res.message)
                 is QueryState.Loading -> Text(text = "Loading")
                 else -> {}
@@ -139,8 +132,6 @@ fun createDialog(
                         }
                         onDismiss()
                     }
-
-
                 },
                 modifier = Modifier
                     .fillMaxWidth()
