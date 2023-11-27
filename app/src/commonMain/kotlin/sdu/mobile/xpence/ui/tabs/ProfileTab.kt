@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material3.Button
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -48,44 +49,44 @@ object ProfileTab : Tab {
         val navigator = LocalNavigator.currentOrThrow
         val coroutineScope = rememberCoroutineScope()
 
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            topBar = {
+                Header()
+            }
+        ) { it ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Greeting(if (authenticationState.isLoggedIn()) "Logged in" else "Logged out")
 
-        Column(
-            modifier = Modifier
-                .padding(
-                    start = 16.dp,
-                    top = 30.dp,
-                    end = 16.dp,
-                    bottom = 30.dp
-                )
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Header()
-            Greeting(if (authenticationState.isLoggedIn()) "Log in" else "Log out")
+                if (!authenticationState.isLoggedIn()) {
 
-            if (!authenticationState.isLoggedIn()) {
+                    var username by rememberSaveable { mutableStateOf("") }
+                    var password by rememberSaveable { mutableStateOf("") }
 
-                var username by rememberSaveable { mutableStateOf("") }
-                var password by rememberSaveable { mutableStateOf("") }
+                    UserNameTextField(username = username, onTextChange = { username = it })
+                    PasswordTextField(password = password, onTextChange = { password = it })
 
-                UserNameTextField(username = username, onTextChange = { username = it })
-                PasswordTextField(password = password, onTextChange = { password = it })
-
-                Button(
-                    onClick = {
-                        coroutineScope.launch {
-                            authenticationState = login(username, password)
-                        }
-                    },
-                    modifier = Modifier
-                        .padding(
-                            start = 16.dp,
-                            top = 30.dp,
-                            end = 16.dp,
-                            bottom = 30.dp
-                        )
-                ) {
-                    Text(text = "Log in")
+                    Button(
+                        onClick = {
+                            coroutineScope.launch {
+                                authenticationState = login(username, password)
+                            }
+                        },
+                        modifier = Modifier
+                            .padding(
+                                start = 16.dp,
+                                top = 30.dp,
+                                end = 16.dp,
+                                bottom = 30.dp
+                            )
+                    ) {
+                        Text(text = "Log in")
+                    }
                 }
 
                 Button(
