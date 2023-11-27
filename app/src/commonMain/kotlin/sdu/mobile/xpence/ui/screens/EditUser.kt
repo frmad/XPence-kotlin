@@ -18,20 +18,12 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import io.ktor.client.HttpClient
 import kotlinx.coroutines.launch
 import sdu.mobile.xpence.ui.components.entryFeild.EmailTextField
 import sdu.mobile.xpence.ui.components.entryFeild.FullNameTextField
-import sdu.mobile.xpence.ui.components.entryFeild.PasswordTextField
-import sdu.mobile.xpence.ui.components.entryFeild.UserNameTextField
-import sdu.mobile.xpence.ui.tabs.HomeTab
 import sdu.mobile.xpence.ui.utils.QueryState
-import sdu.mobile.xpence.ui.utils.authenticationState
-import sdu.mobile.xpence.ui.utils.createUser
 import sdu.mobile.xpence.ui.utils.editUser
 import sdu.mobile.xpence.ui.utils.getCurrentUser
-import sdu.mobile.xpence.ui.utils.getGroups
-import sdu.mobile.xpence.ui.utils.login
 import sdu.mobile.xpence.ui.utils.usingAPI
 
 class EditUser : Screen {
@@ -81,7 +73,7 @@ class EditUser : Screen {
                     onClick = {
                         coroutineScope.launch {
                             try {
-                                authenticationState = editUser(email, fullName)
+                                editUser(email, fullName)
                                 navigator.parent?.pop()
                             } catch (ex: Throwable) {
                                 failMessage = "There was an error editing your account\n"
