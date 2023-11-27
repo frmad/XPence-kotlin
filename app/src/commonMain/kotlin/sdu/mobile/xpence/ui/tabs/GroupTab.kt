@@ -49,17 +49,19 @@ object GroupTab : Tab {
         ) {
             when (val res = result) {
                 is QueryState.Success -> {
+                    createGroup()
                     Column {
                         res.data.forEach { group ->
                             GroupBox(group)
                         }
                     }
                 }
-            is QueryState.Error -> Text(text = res.message)
-            is QueryState.Loading -> Text(text = "Loading")
-            else -> {}
+
+                is QueryState.Error -> Text(text = res.message)
+                is QueryState.Loading -> Text(text = "Loading")
+                else -> {}
+            }
         }
-        createGroup()
     }
 }
 
