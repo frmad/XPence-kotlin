@@ -15,3 +15,7 @@ actual fun Double.formatDecimal(maxFractionDigits: Int): String = DecimalFormat(
 actual fun isIphoneWeb(): Boolean {
     return false
 }
+
+actual fun getUnixTime(): Long {
+    return System.currentTimeMillis()
+}
