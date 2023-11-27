@@ -17,6 +17,7 @@ import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import kotlinx.coroutines.launch
 import sdu.mobile.xpence.ui.components.Greeting
+import sdu.mobile.xpence.ui.components.Header
 import sdu.mobile.xpence.ui.components.PasswordTextField
 import sdu.mobile.xpence.ui.components.UserNameTextField
 import sdu.mobile.xpence.ui.utils.authenticationState
@@ -53,6 +54,7 @@ object ProfileTab : Tab {
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Header()
             Greeting(if (authenticationState.isLoggedIn()) "Logged in" else "Logged out")
 
             if (!authenticationState.isLoggedIn()) {
