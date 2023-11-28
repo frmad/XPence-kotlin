@@ -20,11 +20,11 @@ import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import kotlinx.coroutines.launch
 import sdu.mobile.xpence.ui.components.Greeting
+import sdu.mobile.xpence.ui.components.Header
 import sdu.mobile.xpence.ui.components.entryFeild.PasswordTextField
 import sdu.mobile.xpence.ui.components.entryFeild.UserNameTextField
 import sdu.mobile.xpence.ui.screens.EditUser
 import sdu.mobile.xpence.ui.screens.Signup
-import sdu.mobile.xpence.ui.components.Header
 import sdu.mobile.xpence.ui.utils.authenticationState
 import sdu.mobile.xpence.ui.utils.login
 import sdu.mobile.xpence.ui.utils.logout
@@ -87,22 +87,23 @@ object ProfileTab : Tab {
                     ) {
                         Text(text = "Log in")
                     }
-                }
 
-                Button(
+                    Button(
                         onClick = {
                             navigator.parent?.push(Signup())
                         },
                         modifier = Modifier
-                                .padding(
-                                        start = 16.dp,
-                                        top = 20.dp,
-                                        end = 16.dp,
-                                        bottom = 30.dp
-                                )
-                ) {
-                    Text(text = "Sign up")
+                            .padding(
+                                start = 16.dp,
+                                top = 20.dp,
+                                end = 16.dp,
+                                bottom = 30.dp
+                            )
+                    ) {
+                        Text(text = "Sign up")
+                    }
                 }
+
 
                 if (authenticationState.isLoggedIn()) {
                     Button(
