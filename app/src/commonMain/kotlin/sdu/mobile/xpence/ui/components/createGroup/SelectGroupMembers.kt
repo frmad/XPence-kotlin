@@ -22,6 +22,7 @@ fun selectGroupMembers(
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .height(300.dp)
             .background(Color.White)
             .verticalScroll(rememberScrollState())
     ) {

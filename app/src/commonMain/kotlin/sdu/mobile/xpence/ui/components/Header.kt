@@ -19,7 +19,7 @@ import sdu.mobile.xpence.ui.theme.Purple80
 fun Header() {
     Box(
         modifier = Modifier
-            .padding(start = 10.dp, end = 10.dp, bottom = 20.dp)
+            .padding(start = 10.dp, end = 10.dp, bottom = 0.dp)
             .fillMaxWidth()
             .height(80.dp)
             .background(Purple80, shape = RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp)),

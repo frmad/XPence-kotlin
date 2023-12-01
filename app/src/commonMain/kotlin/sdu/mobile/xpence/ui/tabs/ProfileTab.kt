@@ -20,11 +20,11 @@ import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import kotlinx.coroutines.launch
 import sdu.mobile.xpence.ui.components.Greeting
+import sdu.mobile.xpence.ui.components.Header
 import sdu.mobile.xpence.ui.components.entryFeild.PasswordTextField
 import sdu.mobile.xpence.ui.components.entryFeild.UserNameTextField
 import sdu.mobile.xpence.ui.screens.EditUser
 import sdu.mobile.xpence.ui.screens.Signup
-import sdu.mobile.xpence.ui.components.Header
 import sdu.mobile.xpence.ui.utils.authenticationState
 import sdu.mobile.xpence.ui.utils.login
 import sdu.mobile.xpence.ui.utils.logout
@@ -37,9 +37,9 @@ object ProfileTab : Tab {
             val icon = rememberVectorPainter(Icons.Default.Face)
             return remember {
                 TabOptions(
-                    index = 0u,
-                    title = title,
-                    icon = icon
+                        index = 0u,
+                        title = title,
+                        icon = icon
                 )
             }
         }
@@ -50,16 +50,16 @@ object ProfileTab : Tab {
         val coroutineScope = rememberCoroutineScope()
 
         Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            topBar = {
-                Header()
-            }
+                modifier = Modifier.fillMaxSize(),
+                topBar = {
+                    Header()
+                }
         ) { it ->
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(it),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    modifier = Modifier
+                            .fillMaxSize()
+                            .padding(it),
+                    horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Greeting(if (authenticationState.isLoggedIn()) "Logged in" else "Logged out")
 
@@ -72,71 +72,71 @@ object ProfileTab : Tab {
                     PasswordTextField(password = password, onTextChange = { password = it })
 
                     Button(
+                            onClick = {
+                                coroutineScope.launch {
+                                    authenticationState = login(username, password)
+                                }
+                            },
+                            modifier = Modifier
+                                    .padding(
+                                            start = 16.dp,
+                                            top = 30.dp,
+                                            end = 16.dp,
+                                            bottom = 30.dp
+                                    )
+                    ) {
+                        Text(text = "Log in")
+                    }
+
+                    Button(
                         onClick = {
-                            coroutineScope.launch {
-                                authenticationState = login(username, password)
-                            }
+                            navigator.parent?.push(Signup())
                         },
                         modifier = Modifier
                             .padding(
                                 start = 16.dp,
-                                top = 30.dp,
+                                top = 20.dp,
                                 end = 16.dp,
                                 bottom = 30.dp
                             )
                     ) {
-                        Text(text = "Log in")
+                        Text(text = "Sign up")
                     }
                 }
 
-                Button(
-                    onClick = {
-                        navigator.parent?.push(Signup())
-                    },
-                    modifier = Modifier
-                        .padding(
-                            start = 16.dp,
-                            top = 20.dp,
-                            end = 16.dp,
-                            bottom = 30.dp
-                        )
-                ) {
-                    Text(text = "Sign up")
-                }
 
-            }
+                if (authenticationState.isLoggedIn()) {
+                    Button(
+                            onClick = {
+                                navigator.parent?.push(EditUser())
+                            },
+                            modifier = Modifier
+                                    .padding(
+                                            start = 16.dp,
+                                            top = 30.dp,
+                                            end = 16.dp,
+                                            bottom = 30.dp
+                                    )
+                    ) {
+                        Text(text = "Edit")
+                    }
 
-            if (authenticationState.isLoggedIn()) {
-                Button(
-                    onClick = {
-                        navigator.parent?.push(EditUser())
-                    },
-                    modifier = Modifier
-                        .padding(
-                            start = 16.dp,
-                            top = 30.dp,
-                            end = 16.dp,
-                            bottom = 30.dp
-                        )
-                ) {
-                    Text(text = "Edit")
-                }
-
-                Button(
-                    onClick = {
-                        coroutineScope.launch {
-                            authenticationState = logout()
-                        }
-                    },
-                    modifier = Modifier
-                        .padding(
-                            start = 16.dp,
-                            top = 30.dp,
-                            end = 16.dp,
-                            bottom = 30.dp
-                        )
-                ) {
-                    Text(text = "Log out")
+                    Button(
+                            onClick = {
+                                coroutineScope.launch {
+                                    authenticationState = logout()
+                                }
+                            },
+                            modifier = Modifier
+                                    .padding(
+                                            start = 16.dp,
+                                            top = 30.dp,
+                                            end = 16.dp,
+                                            bottom = 30.dp
+                                    )
+                    ) {
+                        Text(text = "Log out")
+                    }
                 }
             }
         }

@@ -15,6 +15,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import kotlinx.coroutines.launch
 import sdu.mobile.xpence.ui.utils.*
 
@@ -119,27 +121,47 @@ fun createDialog(
 
             val dkk = remember { "DKK" }
             val owner = remember { false }
+            val navigator = LocalNavigator.currentOrThrow
 
-            Button(
-                onClick = {
-                    coroutineScope.launch {
-                        getHttpClient(authenticationState)?.let { client ->
-                            val newGroup = createGroup(client, name, description, dkk)
-                            for (member in selected) {
-                                addGroupMember(client, newGroup.id, member.username, owner)
+            Row(verticalAlignment = Alignment.CenterVertically){
+                Button(
+                    onClick = {
+                        coroutineScope.launch {
+                            getHttpClient(authenticationState)?.let { client ->
+                                val newGroup = createGroup(client, name, description, dkk)
+                                for (member in selected) {
+                                    addGroupMember(client, newGroup.id, member.username, owner)
+                                }
                             }
+                            onDismiss()
                         }
-                        onDismiss()
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Text(text = "Done", modifier = Modifier.padding(8.dp))
-            }
-            Spacer(modifier = Modifier.height(20.dp))
+                    },
+                    modifier = Modifier
+                        .padding(
+                            start = 16.dp,
+                            top = 30.dp,
+                            end = 16.dp,
+                            bottom = 30.dp
+                        )
+                ) {
+                    Text(text = "Done", modifier = Modifier.padding(1.dp))
+                }
 
+                Button(
+                    onClick = {
+                        onDismiss()
+                    },
+                    modifier = Modifier
+                        .padding(
+                            start = 16.dp,
+                            top = 30.dp,
+                            end = 16.dp,
+                            bottom = 30.dp
+                        )
+                ) {
+                    Text(text = "Go Back To Groups", modifier = Modifier.padding(1.dp))
+                }
+            }
         }
     }
 }
