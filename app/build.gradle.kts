@@ -54,6 +54,8 @@ kotlin {
             implementation(libs.compose.uitooling)
             implementation(libs.kotlinx.coroutines.android)
             implementation(libs.ktor.client.okhttp)
+            implementation("com.google.firebase:firebase-messaging-ktx")
+            implementation("com.google.accompanist:accompanist-permissions:0.30.1")
         }
 
         jsMain.dependencies {
@@ -102,6 +104,9 @@ compose.experimental {
 libres {
 }
 tasks.getByPath("jsProcessResources").dependsOn("libresGenerateResources")
+dependencies {
+    implementation(libs.firebase.messaging)
+}
 
 buildConfig {
 }

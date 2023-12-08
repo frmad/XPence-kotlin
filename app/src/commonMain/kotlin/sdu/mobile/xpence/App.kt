@@ -16,5 +16,6 @@ internal fun App() = XPenceTheme {
             SlideTransition(navigator)
         }
     }
+
 }
 
