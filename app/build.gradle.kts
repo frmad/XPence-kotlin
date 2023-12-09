@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.libres)
     alias(libs.plugins.buildConfig)
     alias(libs.plugins.serialization)
+    id("com.google.gms.google-services")
 }
 
 kotlin {
@@ -54,7 +55,8 @@ kotlin {
             implementation(libs.compose.uitooling)
             implementation(libs.kotlinx.coroutines.android)
             implementation(libs.ktor.client.okhttp)
-            implementation("com.google.firebase:firebase-messaging-ktx")
+            implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
+            implementation("com.google.firebase:firebase-messaging-ktx:23.3.1")
             implementation("com.google.accompanist:accompanist-permissions:0.30.1")
         }
 
@@ -76,7 +78,7 @@ android {
         minSdk = 24
         targetSdk = 34
 
-        applicationId = "sdu.mobile.xpence.androidApp"
+        applicationId = "sdu.mobile.xpence"
         versionCode = 1
         versionName = "1.0.0"
     }

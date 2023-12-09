@@ -69,6 +69,8 @@ class CurrencyOffsetMapping(originalText: String, formattedText: String) : Offse
          * if caret is at the end of 123 we do not have index for it in indexes
          * so we take last value from indexes and add 1
          */
+        if (indexes.isEmpty())
+            return 0
         if (offset >= originalLength) {
             return indexes.last() + 1
         }

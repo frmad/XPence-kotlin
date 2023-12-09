@@ -9,3 +9,5 @@ expect fun Double.formatDecimal(maxFractionDigits: Int = 2): String
 expect fun isIphoneWeb(): Boolean
 
 expect fun getUnixTime(): Long
+
+expect fun setNotificationTopic(topic: String)

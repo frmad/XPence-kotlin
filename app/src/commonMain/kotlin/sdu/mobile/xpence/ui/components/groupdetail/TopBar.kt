@@ -108,7 +108,7 @@ fun TopBar(
                     label = {
                         Text(
                             modifier = Modifier.fillMaxWidth(),
-                            text = "See payment status",
+                            text = "Payment Status",
                             textAlign = TextAlign.Center
                         )
                     },

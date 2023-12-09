@@ -102,11 +102,13 @@ fun createDialog(
                                     users.add(user)
                                 }
                             }
+
                             is QueryState.Error -> Text(text = cur.message)
                             is QueryState.Loading -> Text(text = "Loading")
                         }
                     }
                 }
+
                 is QueryState.Error -> Text(text = res.message)
                 is QueryState.Loading -> Text(text = "Loading")
             }
@@ -123,7 +125,7 @@ fun createDialog(
             val owner = remember { false }
             val navigator = LocalNavigator.currentOrThrow
 
-            Row(verticalAlignment = Alignment.CenterVertically){
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Button(
                     onClick = {
                         coroutineScope.launch {
@@ -131,6 +133,11 @@ fun createDialog(
                                 val newGroup = createGroup(client, name, description, dkk)
                                 for (member in selected) {
                                     addGroupMember(client, newGroup.id, member.username, owner)
+                                    sendMessage(
+                                        member.username,
+                                        "Added to group",
+                                        "You were added to group '${newGroup.name}'"
+                                    )
                                 }
                             }
                             onDismiss()

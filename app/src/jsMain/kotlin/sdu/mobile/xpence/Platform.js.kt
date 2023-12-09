@@ -16,3 +16,6 @@ actual fun isIphoneWeb(): Boolean {
 actual fun getUnixTime(): Long {
     return Date.now().toLong()
 }
+
+actual fun setNotificationTopic(topic: String) {
+}

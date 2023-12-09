@@ -1,5 +1,6 @@
 package sdu.mobile.xpence
 
+import android.R
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_DEFAULT
@@ -14,7 +15,11 @@ import com.google.firebase.messaging.RemoteMessage
 import kotlin.random.Random
 
 
-class Notification() : FirebaseMessagingService(){
+class Notification : FirebaseMessagingService() {
+
+    override fun onNewToken(token: String) {
+    }
+
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         remoteMessage.notification?.let { message ->
             sendNotification(message)
@@ -32,12 +37,13 @@ class Notification() : FirebaseMessagingService(){
         )
 
         //val channelId = this.getString(R.string.default_notification_channel_id)
-        val channelId = "fcm_default_channel";
+        val channelId = "fcm_default_channel"
 
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
             .setContentTitle(message.title)
             .setContentText(message.body)
             .setAutoCancel(true)
+            .setSmallIcon(R.drawable.star_on)
             .setContentIntent(pendingIntent)
 
         val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager

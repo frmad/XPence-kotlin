@@ -23,6 +23,7 @@ import kotlinx.serialization.json.Json
 import okio.internal.commonToUtf8String
 import sdu.mobile.xpence.getUnixTime
 import sdu.mobile.xpence.httpClient
+import sdu.mobile.xpence.setNotificationTopic
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
@@ -88,6 +89,7 @@ suspend fun login(username: String, password: String): AuthenticationData {
 
     if (response.status.isSuccess()) {
         val tokens: TokenInfo = response.body()
+        setNotificationTopic(username)
         return AuthenticationData(tokens.accessToken)
     }
 
@@ -98,6 +100,7 @@ suspend fun login(username: String, password: String): AuthenticationData {
  * This function should be called to perform logout
  */
 fun logout(): AuthenticationData {
+    setNotificationTopic("none")
     return AuthenticationData(null)
 }
 

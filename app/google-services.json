@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "486592843340",
+    "project_id": "xpence-bddb4",
+    "storage_bucket": "xpence-bddb4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:486592843340:android:6f11849badfa9e8c00eee9",
+        "android_client_info": {
+          "package_name": "sdu.mobile.xpence"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6ONvZvU5fEJHOG1wNhvge6A3DDcj93ZU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

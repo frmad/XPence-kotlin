@@ -1,12 +1,17 @@
 package sdu.mobile.xpence.ui.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -15,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.bottomSheet.LocalBottomSheetNavigator
+import kotlinx.coroutines.launch
 import sdu.mobile.xpence.formatDecimal
 import sdu.mobile.xpence.ui.utils.*
 import kotlin.math.abs
@@ -32,9 +38,11 @@ class GroupDetailShowStatus(
     val members: Array<GroupMember>,
     val onPressWithdraw: (Int) -> Unit
 ) : Screen {
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
         val bottomSheetNavigator = LocalBottomSheetNavigator.current
+        val coroutineScope = rememberCoroutineScope()
         val result by usingAPI { client ->
             getGroupBalance(client, group.id)
         }
@@ -115,7 +123,7 @@ class GroupDetailShowStatus(
             LazyColumn(
                 modifier = Modifier.fillMaxSize().padding(it),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterVertically)
+                verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically)
             ) {
                 items(members) { item ->
                     Row(
@@ -137,6 +145,27 @@ class GroupDetailShowStatus(
                                 ).formatDecimal(2)
                             } ${group.currency_code}"
                         )
+                        Spacer(
+                            Modifier
+                                .height(2.dp)
+                                .width(4.dp)
+                        )
+                        if (item.balanceAmountCents < 0) {
+                            OutlinedButton(
+                                onClick = {
+                                    coroutineScope.launch {
+                                        sendMessage(item.username, "You owe", "A lot of money")
+                                    }
+                                },
+                                modifier = Modifier.size(24.dp),
+                                shape = CircleShape,
+                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+                                contentPadding = PaddingValues(0.dp),
+                                colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.primary)
+                            ) {
+                                Icon(Icons.Outlined.Notifications, contentDescription = "")
+                            }
+                        }
                     }
                 }
                 item {
