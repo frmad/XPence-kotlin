@@ -1,4 +1,4 @@
-package sdu.mobile.xpence.ui.components
+package sdu.mobile.xpence.ui.components.entryFeild
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.OutlinedTextField

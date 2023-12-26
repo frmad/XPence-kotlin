@@ -1,6 +1,8 @@
 package sdu.mobile.xpence.ui.components
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -36,6 +38,7 @@ fun GroupList() {
                     modifier = Modifier
                         .align(Alignment.TopCenter)
                         .padding(5.dp)
+                        .verticalScroll(rememberScrollState())
                 ) {
                     res.data.forEach { group ->
                         val expenses by usingAPI { client ->

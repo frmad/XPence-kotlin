@@ -18,8 +18,22 @@ import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import okio.internal.commonToUtf8String
+import sdu.mobile.xpence.getUnixTime
 import sdu.mobile.xpence.httpClient
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
+
+/**
+ * Session token model
+ */
+@Serializable
+class SessionTokenModel(
+    val sub: String,
+    val exp: Long
+)
 
 /**
  * Authentication data is persisted through the native storage of the platform, using a 3rd-party package
@@ -39,7 +53,7 @@ class AuthenticationData(val sessionToken: String? = settings["sessionToken"]) {
     }
 
     fun isLoggedIn(): Boolean {
-        return sessionToken != null
+        return getHttpClient(authenticationState) != null
     }
 }
 
@@ -47,7 +61,10 @@ class AuthenticationData(val sessionToken: String? = settings["sessionToken"]) {
  * This stores a global state for the authentication data. The navigator should be setup to get recomposed when this
  * changes.
  */
-var authenticationState: AuthenticationData by mutableStateOf(AuthenticationData(), structuralEqualityPolicy())
+var authenticationState: AuthenticationData by mutableStateOf(
+    AuthenticationData(),
+    structuralEqualityPolicy()
+)
 
 /**
  * This function is used to generate new authentication data,
@@ -89,9 +106,17 @@ fun logout(): AuthenticationData {
  *
  * @return If the authenticationData session token is invalid, then null is returned.
  */
+@OptIn(ExperimentalEncodingApi::class)
 fun getHttpClient(authenticationData: AuthenticationData?): HttpClient? {
     authenticationData ?: return null
     val sessionToken = authenticationData.sessionToken ?: return null
+
+    // Check if session is expired
+    val sessionDataBase64 = sessionToken.split(".")[1]
+    val sessionData =
+        Json.decodeFromString(SessionTokenModel.serializer(), Base64.decode(sessionDataBase64).commonToUtf8String())
+    if (getUnixTime() > sessionData.exp * 1000)
+        return null
 
     return httpClient {
         install(DefaultRequest) {
@@ -141,6 +166,38 @@ fun <T> usingAPI(query: suspend CoroutineScope.(HttpClient) -> T): State<QuerySt
             }
         }
     }
+}
+
+
+suspend fun createUser(
+    email: String,
+    name: String,
+    username: String,
+    password: String
+): AuthenticationData {
+    val localClient = httpClient {
+        install(ContentNegotiation) {
+            json()
+        }
+    }
+
+    val response = localClient.submitForm(
+        url = "https://xpense-api.gredal.dev/signup",
+        formParameters = parameters {
+            append("username", username)
+            append("email", email)
+            append("full_name", name)
+            append("password", password)
+            append("profile_image", "admin.png")
+        }
+    )
+
+    if (response.status.isSuccess()) {
+        val tokens: TokenInfo = response.body()
+        return AuthenticationData(tokens.accessToken)
+    }
+
+    return AuthenticationData()
 }
 
 /**

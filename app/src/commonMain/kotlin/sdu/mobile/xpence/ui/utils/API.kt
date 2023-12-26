@@ -3,6 +3,7 @@ package sdu.mobile.xpence.ui.utils
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
+import io.ktor.client.request.forms.*
 import io.ktor.http.*
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -14,14 +15,24 @@ import kotlin.math.abs
 @Serializable
 data class TokenInfo(
     @SerialName("access_token") val accessToken: String,
-    @SerialName("token_type") val tokenType: String,
+    @SerialName("token_type") val tokenType: String
 )
 
 @Serializable
-data class Group(val id: Int, val name: String, val description: String = "", val currency_code: String = "DKK")
+data class Group(
+    val id: Int,
+    val name: String,
+    val description: String = "",
+    val currency_code: String = "DKK"
+)
 
 @Serializable
-data class User(val username: String)
+data class User(
+    val username: String,
+    val email: String,
+    @SerialName("full_name")
+    val fullName: String,
+)
 
 @Serializable
 data class Balance(
@@ -67,16 +78,39 @@ data class PostExpense(
     val members: List<PostExpenseMember>
 )
 
-data class Transaction(val id: Int, val groupID: Int, val username: String, val amount_in_cents: Int, val date: String)
+data class Transaction(
+    val id: Int,
+    val groupID: Int,
+    val username: String,
+    val amount_in_cents: Int,
+    val date: String
+)
 
 enum class TransactionType {
     DEPOSIT,
     WITHDRAWAL
 }
 
+@Serializable
+data class Member(
+    @SerialName("group_id") val groupId: Int,
+    val username: String,
+    @SerialName("is_owner") val isOwner: Boolean,
+)
+@Serializable
+data class NewGroup(
+    val id: Int,
+    val name: String,
+    val description: String,
+    @SerialName("currency_code") val currencyCode: String
+)
+
 // API CALLS
 
 //Users
+suspend fun getUsers(client: HttpClient): Array<User> {
+    return client.get("https://xpense-api.gredal.dev/users").body<Array<User>>()
+}
 
 suspend fun getCurrentUser(client: HttpClient): User {
     return client.get("https://xpense-api.gredal.dev/current_user").body<User>()
@@ -91,26 +125,42 @@ suspend fun getGroup(client: HttpClient, id: Int): Group {
     return client.get("https://xpense-api.gredal.dev/groups/$id").body<Group>()
 }
 
+
 suspend fun getGroupMembers(client: HttpClient, id: Int): Array<GroupMember> {
     return client.get("https://xpense-api.gredal.dev/groups/$id/members").body<Array<GroupMember>>()
 }
 
-suspend fun createGroup(client: HttpClient, group: Group): HttpStatusCode {
+suspend fun createGroup(
+    client: HttpClient,
+    name: String,
+    description: String,
+    currencyCode: String
+): NewGroup {
     return client.post("https://xpense-api.gredal.dev/groups") {
-        contentType(ContentType.Application.Json)
-        setBody(group)
-    }.status
+        parameter("name", name)
+        parameter("description", description)
+        parameter("currency_code", currencyCode)
+
+    }.body<NewGroup>()
 }
 
-suspend fun addGroupMember(client: HttpClient, id: Int, member: User): HttpStatusCode {
-    return client.post("https://xpense-api.gredal.dev/groups/$id/members") {
+suspend fun addGroupMember(
+    client: HttpClient,
+    groupId: Int,
+    username: String,
+    isOwner: Boolean
+): Array<Member> {
+    return client.post("https://xpense-api.gredal.dev/groups/$groupId/members") {
         contentType(ContentType.Application.Json)
-        setBody(member)
-    }.status
+        setBody(Member(groupId, username, isOwner))
+        parameter("username", username)
+        parameter("is_owner", isOwner)
+    }.body<Array<Member>>()
 }
 
 suspend fun deleteGroupMember(client: HttpClient, id: Int, username: String): Array<User> {
-    return client.get("https://xpense-api.gredal.dev/groups/$id/members/$username").body<Array<User>>()
+    return client.get("https://xpense-api.gredal.dev/groups/$id/members/$username")
+        .body<Array<User>>()
 }
 
 suspend fun getGroupBalance(client: HttpClient, id: Int): Balance {
@@ -118,9 +168,9 @@ suspend fun getGroupBalance(client: HttpClient, id: Int): Balance {
 }
 
 // Expenses
-
 suspend fun getExpenses(client: HttpClient, groupID: Int): Array<Expenses> {
-    return client.get("https://xpense-api.gredal.dev/groups/$groupID/expenses").body<Array<Expenses>>()
+    return client.get("https://xpense-api.gredal.dev/groups/$groupID/expenses")
+        .body<Array<Expenses>>()
 }
 
 suspend fun createExpense(client: HttpClient, groupID: Int, expense: PostExpense): HttpStatusCode {
@@ -131,15 +181,22 @@ suspend fun createExpense(client: HttpClient, groupID: Int, expense: PostExpense
 }
 
 suspend fun getExpense(client: HttpClient, groupID: Int, expensesID: Int): Array<Expenses> {
-    return client.get("https://xpense-api.gredal.dev/groups/$groupID/expenses/$expensesID").body<Array<Expenses>>()
+    return client.get("https://xpense-api.gredal.dev/groups/$groupID/expenses/$expensesID")
+        .body<Array<Expenses>>()
 }
 
 //Transactions
 suspend fun getTransactions(client: HttpClient, groupID: Int): Array<Transaction> {
-    return client.get("https://xpense-api.gredal.dev/groups/$groupID/transactions").body<Array<Transaction>>()
+    return client.get("https://xpense-api.gredal.dev/groups/$groupID/transactions")
+        .body<Array<Transaction>>()
 }
 
-suspend fun createTransaction(client: HttpClient, groupID: Int, amountInCents: Int, type: TransactionType) {
+suspend fun createTransaction(
+    client: HttpClient,
+    groupID: Int,
+    amountInCents: Int,
+    type: TransactionType
+) {
     val amount = when (type) {
         TransactionType.DEPOSIT -> abs(amountInCents)
         TransactionType.WITHDRAWAL -> abs(amountInCents) * -1
@@ -148,5 +205,25 @@ suspend fun createTransaction(client: HttpClient, groupID: Int, amountInCents: I
     client.post("https://xpense-api.gredal.dev/groups/$groupID/transactions") {
         contentType(ContentType.Application.Json)
         parameter("amount_in_cents", amount)
+    }
+}
+suspend fun editUser(email: String, name: String) {
+    val localClient = getHttpClient(authenticationState)
+
+    val username = localClient?.let { getCurrentUser(it).username }
+
+    localClient?.put("https://xpense-api.gredal.dev/users/$username") {
+        setBody(
+            FormDataContent(
+                Parameters.build {
+                    if (username != null) {
+                        append("username", username)
+                    }
+                    append("email", email)
+                    append("full_name", name)
+                    append("profile_image", "admin.png")
+                }
+            )
+        )
     }
 }
