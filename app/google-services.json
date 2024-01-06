@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "778572390405",
+    "project_id": "mobiledev-7ae8f",
+    "storage_bucket": "mobiledev-7ae8f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:778572390405:android:2a173389eae51532673c6c",
+        "android_client_info": {
+          "package_name": "sdu.mobile.xpence.androidApp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCuditWK_9aTgaPIrm43_Zx-VU5ccLRqHw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

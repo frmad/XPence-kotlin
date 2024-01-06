@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.libres)
     alias(libs.plugins.buildConfig)
     alias(libs.plugins.serialization)
+    alias(libs.plugins.google.services)
 }
 
 kotlin {
@@ -42,6 +43,7 @@ kotlin {
             implementation(libs.ktor.content.negotiation)
             implementation(libs.multiplatform.settings)
             implementation(libs.multiplatform.settings.noarg)
+
         }
 
         commonTest.dependencies {
@@ -54,6 +56,7 @@ kotlin {
             implementation(libs.compose.uitooling)
             implementation(libs.kotlinx.coroutines.android)
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.firebase.messaging)
         }
 
         jsMain.dependencies {
