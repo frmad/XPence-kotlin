@@ -57,6 +57,7 @@ kotlin {
             implementation(libs.kotlinx.coroutines.android)
             implementation(libs.ktor.client.okhttp)
             implementation(libs.firebase.messaging)
+            implementation(libs.firebase.firestore.ktx)
         }
 
         jsMain.dependencies {
@@ -105,6 +106,8 @@ compose.experimental {
 libres {
 }
 tasks.getByPath("jsProcessResources").dependsOn("libresGenerateResources")
+dependencies {
+}
 
 buildConfig {
 }

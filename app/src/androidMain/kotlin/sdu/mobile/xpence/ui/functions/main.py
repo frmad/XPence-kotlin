@@ -1,39 +1,37 @@
-# Welcome to Cloud Functions for Firebase for Python!
-# To get started, simply uncomment the below code or create your own.
-# Deploy with `firebase deploy`
-
-from firebase_functions import https_fn
-from firebase_admin import initialize_app
-
 import firebase_admin
 from firebase_admin import credentials, messaging, firestore
-initialize_app()
+from firebase_functions import https_fn
 
-
-@https_fn.on_request()
-def on_request_example(req: https_fn.Request) -> https_fn.Response:
-     return https_fn.Response("Hello world!")
-
+# Initialize Firebase Admin SDK
 if not firebase_admin._apps:
     cred = credentials.Certificate('.key.json')
     firebase_admin.initialize_app(cred)
+
+@https_fn.on_request()
+def on_request_example(req: https_fn.Request) -> https_fn.Response:
+    send_notifications("send")
+    return https_fn.Response("Hello world!")
+
 def send_notifications(request):
     db = firestore.client()
     users_ref = db.collection('users')
-    tokens = [user.get('token') for user in users_ref.stream()]
+    tokens = [user.get('token') for user in users_ref.stream() if user.get('token')]
 
-    # Notification content
-    message = messaging.Message(
-        notification=messaging.Notification(
+    if tokens:
+        notification = messaging.Notification(
             title='Your Notification Title',
             body='Your Notification Body'
-        ),
-        tokens=tokens,
-    )
+        )
 
-    # Send a message to the devices subscribed to the provided topic.
-    response = messaging.send_multicast(message)
-    print('Successfully sent message:', response)
+        message = messaging.MulticastMessage(
+            notification=notification,
+            tokens=tokens  # Assuming tokens is a list of FCM tokens
+        )
+
+        response = messaging.send_multicast(message)
+        print('Successfully sent message:', response)
+    else:
+        print('No tokens found')
 
     return 'Notifications sent', 200
 

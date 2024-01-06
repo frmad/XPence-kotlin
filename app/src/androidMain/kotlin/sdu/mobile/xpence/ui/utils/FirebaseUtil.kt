@@ -1,7 +1,9 @@
 package sdu.mobile.xpence.ui.utils
 
 import android.util.Log
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.Constants.MessageNotificationKeys.TAG
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
@@ -35,5 +37,19 @@ class FirebaseUtil: FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
 
+        FirebaseMessaging.getInstance().token.addOnSuccessListener { token ->
+            if (token != null) {
+                val userTokenMap = hashMapOf("token" to token)
+                FirebaseFirestore.getInstance().collection("users")
+                    .document("TESTER") // replace with actual user ID
+                    .set(userTokenMap)
+                    .addOnSuccessListener {
+                        Log.d(TAG, "Token successfully written!")
+                    }
+                    .addOnFailureListener { e ->
+                        Log.w(TAG, "Error writing token", e)
+                    }
+            }
+        }
     }
 }

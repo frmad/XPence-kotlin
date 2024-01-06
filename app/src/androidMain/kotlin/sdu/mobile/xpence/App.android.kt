@@ -13,9 +13,11 @@ import androidx.compose.runtime.*
 import androidx.core.content.ContextCompat
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.FirebaseApp
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.Constants.TAG
 import com.google.firebase.messaging.FirebaseMessaging
 import sdu.mobile.xpence.ui.utils.NotificationUtil
+import sdu.mobile.xpence.ui.utils.getCurrentUser
 
 
 class AndroidApp : Application() {
@@ -33,6 +35,20 @@ class AndroidApp : Application() {
         NotificationUtil.createNotificationChannel("2","Account","These notifications are for getting information of log ins and threats to your account")
         NotificationUtil.createNotificationChannel("3","Ads","These notifications ads")
         NotificationUtil.createNotificationChannel("4","Other","miscellaneous notifications ")
+        FirebaseMessaging.getInstance().token.addOnSuccessListener { token ->
+            if (token != null) {
+                val userTokenMap = hashMapOf("token" to token)
+                FirebaseFirestore.getInstance().collection("users")
+                    .document("USER_ID") // replace with actual user ID
+                    .set(userTokenMap)
+                    .addOnSuccessListener {
+                        Log.d(TAG, "Token successfully written!")
+                    }
+                    .addOnFailureListener { e ->
+                        Log.w(TAG, "Error writing token", e)
+                    }
+            }
+        }
 
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
             if (!task.isSuccessful) {
