@@ -9,6 +9,8 @@ import android.util.Log
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.Constants
 import com.google.firebase.messaging.Constants.MessageNotificationKeys.TAG
 import com.google.firebase.messaging.FirebaseMessaging
 import sdu.mobile.xpence.R
@@ -19,7 +21,6 @@ actual object NotificationUtil {
 
     actual fun init(context: Any) {
         appContext = context as Context
-
     }
 
     actual fun createNotificationChannel(channelId: String, channelName: String, channelDescription: String) {
@@ -35,9 +36,8 @@ actual object NotificationUtil {
     }
 
     actual fun sendNotification(channelId: String, title: String, content: String) {
-        println("PWEASE WORK")
         val builder = NotificationCompat.Builder(appContext, channelId)
-            .setSmallIcon(androidx.core.R.drawable.ic_call_decline_low)
+            .setSmallIcon(android.R.drawable.ic_menu_compass)
             .setContentTitle(title)
             .setContentText(content)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -47,13 +47,5 @@ actual object NotificationUtil {
         notificationManager.notify(0, builder.build())
     }
 
-    fun handleFirebaseMessage(data: Map<String, String>) {
-        val title = data["title"] ?: "Default Title"
-        val content = data["message"] ?: "Default Content"
-        val channelId = "8"
 
-        createNotificationChannel(channelId, "Channel Name", "Channel Description")
-
-        sendNotification(channelId, title, content)
-    }
 }
