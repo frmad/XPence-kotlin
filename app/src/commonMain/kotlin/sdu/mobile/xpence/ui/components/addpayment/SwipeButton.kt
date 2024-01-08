@@ -24,6 +24,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
+import sdu.mobile.xpence.ui.utils.NotificationUtil
 import kotlin.math.roundToInt
 
 // BASED ON: https://github.com/patrick-elmquist/Demo-SlideToUnlock
@@ -43,6 +44,7 @@ fun SlideToUnlock(
             if (anchor == Anchor.End) {
                 hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
                 onUnlockRequested()
+                NotificationUtil.sendNotification("2","Payment","Your money have been paid")
             }
             true
         }

@@ -23,7 +23,6 @@ class AppContent : Screen {
     override fun Content() {
         TabNavigator(targetNavigationTab.value) {
             val tabNavigator = LocalTabNavigator.current
-
             if (tabNavigator.current != targetNavigationTab.value) {
                 tabNavigator.current = targetNavigationTab.value
             }
